@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Isabella's Cafe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../images/logo.webp">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        black: '#0a0a0a',
+                        white: '#ffffff',
+                    },
+                    backgroundImage: {
+                        'gradient-gold': 'linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728, #FDED68, #BF953F)',
+                    },
+                    backgroundSize: {
+                        '200%': '200% auto',
+                    },
+                    animation: {
+                        'gradient': 'gradient 3s ease infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Smooth Page Transition Styles */
+        body {
+            animation: fadeInPage 0.6s ease-out forwards;
+        }
+
+        @keyframes fadeInPage {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+
+        .page-transitioning {
+            opacity: 0 !important;
+            transition: opacity 0.4s ease !important;
+        }
+
+        /* Scroll Reveal Animations */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            background-image: linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728);
+            background-size: 200% auto;
+            color: black;
+            transition: 0.5s;
+        }
+
+        .btn-gold:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(191, 149, 63, 0.7);
+        }
+
+        #navbar {
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .nav-link,
+        .nav-underline,
+        .mobile-menu-btn {
+            transition: all 0.3s ease;
+        }
+
+        #navbar.theme-dark {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #navbar.theme-dark .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #navbar.theme-dark .nav-link:hover {
+            color: #ffffff;
+        }
+
+        #navbar.theme-dark .nav-underline {
+            background-color: #ffffff;
+        }
+
+        #navbar.theme-dark .mobile-menu-btn {
+            color: #ffffff;
+        }
+
+        #navbar.theme-light {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-bottom-color: rgba(0, 0, 0, 0.1);
+        }
+
+        #navbar.theme-light .nav-link {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        #navbar.theme-light .nav-link:hover {
+            color: #000000;
+        }
+
+        #navbar.theme-light .nav-underline {
+            background-color: #000000;
+        }
+
+        #navbar.theme-light .mobile-menu-btn {
+            color: #000000;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-black font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 backdrop-blur-2xl border-b theme-light" id="navbar">
+        <div class="w-full px-6 lg:px-[1in]">
+            <div class="flex justify-between items-center h-20">
+                <a href="home.html" class="flex items-center shrink-0">
+                    <img src="../images/logo_black.webp" alt="Isabella's Cafe Logo"
+                        class="nav-logo h-12 w-auto object-contain transition-opacity duration-300">
+                </a>
+
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="home.html" class="nav-link font-sans font-normal relative group">
+                        Home
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="about.html" class="nav-link font-sans font-normal relative group text-black">
+                        About
+                        <span class="nav-underline absolute -bottom-1 left-0 w-full h-0.5 transition-all bg-black"></span>
+                    </a>
+                    <a href="menu.html" class="nav-link font-sans font-normal relative group">
+                        Menu
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="gallery.html" class="nav-link font-sans font-normal relative group">
+                        Gallery
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="contact.html" class="nav-link font-sans font-normal relative group">
+                        Contacts
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button class="mobile-menu-btn focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 transition-all duration-300 opacity-0 pointer-events-none">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white hover:text-gray-300 focus:outline-none transition-colors w-12 h-12 flex items-center justify-center rounded-full bg-white/10">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <a href="home.html" class="flex items-center shrink-0 mb-4">
+            <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="h-16 w-auto object-contain">
+        </a>
+        <a href="home.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Home</a>
+        <a href="about.html" class="mobile-link text-[#BF953F] text-2xl font-medium tracking-wide transition-colors">About</a>
+        <a href="menu.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Menu</a>
+        <a href="gallery.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Gallery</a>
+        <a href="contact.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Contacts</a>
+    </div>
+
+    <!-- Section: The Visionaries (Picture Left, Text Right) -->
+    <section data-theme="light" class="pt-32 md:pt-40 pb-24 px-6 lg:px-[1in] w-full bg-white">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            <!-- Left: Picture -->
+            <div class="relative h-[400px] lg:h-[600px] w-full max-w-md mx-auto lg:max-w-none reveal" style="transition-delay: 0.1s;">
+                <div class="absolute inset-0 overflow-hidden rounded-tl-[100px] rounded-br-[100px] shadow-2xl z-10 hover:scale-105 transition-transform duration-700">
+                    <img src="../images/pic10.webp" alt="The Owners of Isabella's Cafe" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-gold rounded-full opacity-10 filter blur-3xl z-0"></div>
+            </div>
+
+            <!-- Right: Text -->
+            <div class="text-center lg:text-left">
+                <!-- Subtitle -->
+                <h2 class="reveal text-sm font-bold tracking-widest text-gray-500 uppercase mb-3" style="transition-delay: 0.2s;">
+                    The Visionaries
+                </h2>
+                <!-- Main Heading -->
+                <h3 class="reveal text-3xl md:text-5xl font-bold mb-6 text-black leading-tight" style="transition-delay: 0.3s;">
+                    Meet the Passion Behind the Pour
+                </h3>
+                <!-- Paragraph 1 -->
+                <p class="reveal text-gray-600 mb-6 leading-relaxed text-base md:text-lg" style="transition-delay: 0.4s;">
+                    Isabella’s Cafe began as a simple dream shared by two coffee enthusiasts who wanted to bring a taste
+                    of luxury to the serene shores of San Jose, Antique. Guided by their passion for exceptional flavors
+                    and heartfelt hospitality, they transformed a quiet spot on the Seawall into a bustling community hub.
+                </p>
+                <!-- Paragraph 2 -->
+                <p class="reveal text-gray-600 mb-10 leading-relaxed text-base md:text-lg" style="transition-delay: 0.5s;">
+                    Every detail of the cafe—from the meticulously sourced beans to the elegant black-and-gold
+                    aesthetic—reflects their dedication to quality. They believe that a cup of coffee isn't just a
+                    drink; it's a momentary escape, a spark of inspiration, and a way to bring people together.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Section: Our Home (Text Left, Picture Right) -->
+    <section data-theme="light" class="py-24 px-6 lg:px-[1in] w-full bg-white text-black border-t border-gray-100">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            <!-- Left: Text (Order 2 on Mobile, Order 1 on Desktop) -->
+            <div class="order-2 lg:order-1 text-center lg:text-left">
+                <h2 class="reveal text-sm font-bold tracking-widest text-gray-500 uppercase mb-3" style="transition-delay: 0.1s;">
+                    Our Home
+                </h2>
+                <h3 class="reveal text-3xl md:text-5xl font-bold mb-6 text-black leading-tight" style="transition-delay: 0.2s;">
+                    A Front Row Seat to the Sunset
+                </h3>
+                <p class="reveal text-gray-600 mb-6 leading-relaxed text-base md:text-lg" style="transition-delay: 0.3s;">
+                    Perched perfectly on the Marina Sea Wall, Isabella’s Cafe offers an ambiance that simply cannot be
+                    replicated. Our open-air architecture invites the soothing coastal breezes inside, creating an
+                    atmosphere that is as refreshing as our signature iced coolers.
+                </p>
+                <p class="reveal text-gray-600 mb-10 leading-relaxed text-base md:text-lg" style="transition-delay: 0.4s;">
+                    Whether you're looking for a quiet morning reading corner bathed in natural sunlight, or a romantic
+                    evening spot to watch the sky ignite over the Sulu Sea, our space is designed to be your sanctuary.
+                    It’s where modern elegance meets the effortless beauty of Antique’s coastline.
+                </p>
+                <!-- Button wrapper for reveal -->
+                <div class="reveal" style="transition-delay: 0.5s;">
+                    <a href="gallery.html" class="inline-flex items-center justify-center gap-3 btn-gold px-8 py-4 rounded-full font-bold uppercase tracking-wide w-full sm:w-auto">
+                        View Gallery <i class="fas fa-camera"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Right: Picture (Order 1 on Mobile, Order 2 on Desktop) -->
+            <div class="relative h-[400px] lg:h-[600px] w-full max-w-md mx-auto lg:max-w-none reveal order-1 lg:order-2" style="transition-delay: 0.6s;">
+                <div class="absolute inset-0 overflow-hidden rounded-tr-[100px] rounded-bl-[100px] shadow-2xl z-10 hover:scale-105 transition-transform duration-700">
+                    <img src="../images/pic4.webp" alt="The beautiful aesthetic of Isabella's Cafe" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-gold rounded-full opacity-10 filter blur-3xl z-0"></div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacts" data-theme="dark" class="bg-black text-white pt-20 pb-10 border-t-4"
+        style="border-image: linear-gradient(45deg, #A67C00, #FCF6BA, #B38728) 1;">
+        <div class="w-full px-6 lg:px-[1in]">
+            <!-- Footer Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 mb-16">
+
+                <!-- About Column (0.1s) -->
+                <div class="col-span-1 sm:col-span-2 md:col-span-1 reveal" style="transition-delay: 0.1s;">
+                    <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="h-10 w-auto mb-6 object-contain">
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Elevating your daily ritual through exceptional coffee, artful pastries, and minimalist design.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://web.facebook.com/isabellas.cafeANTQ" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/isabellas.cafe/" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Links Column (0.2s) -->
+                <div class="reveal" style="transition-delay: 0.2s;">
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">
+                        Quick Links
+                    </h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="home.html" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="menu.html" class="hover:text-white transition-colors">Our Menu</a></li>
+                        <li><a href="gallery.html" class="hover:text-white transition-colors">Gallery</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Column (0.3s) -->
+                <div class="reveal" style="transition-delay: 0.3s;">
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">
+                        Contact Us
+                    </h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1 shrink-0"></i>
+                            <span>SEAWALL,<br>Bay Walk Marina St. San Jose, Antique</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone shrink-0"></i>
+                            <span>+63 112 233 3444</span>
+                        </li>
+                        <li class="flex items-center gap-3 overflow-hidden">
+                            <i class="fas fa-envelope shrink-0"></i>
+                            <span class="truncate">juvellealtubar29@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Hours Column (0.4s) -->
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">
+                        Hours
+                    </h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Mon - Fri</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Saturday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Sunday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="text-center text-gray-600 border-t border-gray-800 pt-8 text-sm">
+                <p>&copy; 2026 Isabella's Cafe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = ''; 
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // --- Page Transition Logic ---
+        document.addEventListener("DOMContentLoaded", () => {
+            const links = document.querySelectorAll('a');
+
+            links.forEach(link => {
+                link.addEventListener('click', function (e) {
+                    const href = this.getAttribute('href');
+                    const target = this.getAttribute('target');
+
+                    // Only trigger animation for actual HTML page switches, exclude hash links or external tabs
+                    if (href && href.includes('.html') && target !== '_blank' && !this.classList.contains('mobile-link')) {
+                        e.preventDefault();
+                        document.body.classList.add('page-transitioning');
+                        setTimeout(() => {
+                            window.location.href = href;
+                        }, 400); 
+                    } else if (this.classList.contains('mobile-link') && href && href.includes('.html')) {
+                        // For mobile menu links, add slight delay to show menu closing before transition
+                        e.preventDefault();
+                        setTimeout(() => {
+                            document.body.classList.add('page-transitioning');
+                            setTimeout(() => {
+                                window.location.href = href;
+                            }, 400);
+                        }, 200);
+                    }
+                });
+            });
+        });
+
+        // Ensure page resets its opacity if accessed via browser's Back/Forward cache (bfcache)
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted) {
+                document.body.classList.remove('page-transitioning');
+            }
+        });
+
+        // --- Navbar Theme Handling Logic ---
+        const handleNavTheme = () => {
+            const navbar = document.getElementById('navbar');
+            const navLogo = document.querySelector('.nav-logo');
+            const sections = document.querySelectorAll('[data-theme]');
+            const checkPoint = window.scrollY + navbar.offsetHeight + 10;
+            let currentTheme = 'light'; // default fallback for this specific page layout
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                if (checkPoint >= sectionTop && checkPoint <= sectionBottom) {
+                    currentTheme = section.getAttribute('data-theme');
+                }
+            });
+
+            if (currentTheme === 'dark') {
+                navbar.classList.add('theme-dark');
+                navbar.classList.remove('theme-light');
+                if (!navLogo.src.includes('logo_white.webp')) {
+                    navLogo.src = '../images/logo_white.webp';
+                }
+            } else {
+                navbar.classList.add('theme-light');
+                navbar.classList.remove('theme-dark');
+                if (!navLogo.src.includes('logo_black.webp')) {
+                    navLogo.src = '../images/logo_black.webp';
+                }
+            }
+
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        };
+
+        window.addEventListener('scroll', handleNavTheme);
+        window.addEventListener('resize', handleNavTheme);
+        handleNavTheme(); // Initial call
+
+        // --- Scroll Reveal Animation Logic ---
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        // Add small delay to let page transition complete before triggering reveal calculations
+        setTimeout(reveal, 100); 
+    </script>
+</body>
+
+</html>

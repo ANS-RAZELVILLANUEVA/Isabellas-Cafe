@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Isabella's Cafe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../images/logo.webp">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        black: '#0a0a0a',
+                        white: '#ffffff',
+                    },
+                    backgroundImage: {
+                        'gradient-gold': 'linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728, #FDED68, #BF953F)',
+                    },
+                    backgroundSize: {
+                        '200%': '200% auto',
+                    },
+                    animation: {
+                        'gradient': 'gradient 3s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            background-image: linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728);
+            background-size: 200% auto;
+            color: black;
+            transition: 0.5s;
+        }
+
+        .btn-gold:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(191, 149, 63, 0.7);
+        }
+
+        .slide {
+            opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+        }
+
+        .slide.active {
+            opacity: 1;
+        }
+
+        #navbar {
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .nav-link,
+        .nav-underline,
+        .mobile-menu-btn {
+            transition: all 0.3s ease;
+        }
+
+        #navbar.theme-dark {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #navbar.theme-dark .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #navbar.theme-dark .nav-link:hover {
+            color: #ffffff;
+        }
+
+        #navbar.theme-dark .nav-underline {
+            background-color: #ffffff;
+        }
+
+        #navbar.theme-dark .mobile-menu-btn {
+            color: #ffffff;
+        }
+
+        #navbar.theme-light {
+            background-color: rgba(255, 255, 255, 0.7);
+            border-bottom-color: rgba(0, 0, 0, 0.1);
+        }
+
+        #navbar.theme-light .nav-link {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        #navbar.theme-light .nav-link:hover {
+            color: #000000;
+        }
+
+        #navbar.theme-light .nav-underline {
+            background-color: #000000;
+        }
+
+        #navbar.theme-light .mobile-menu-btn {
+            color: #000000;
+        }
+
+        .reviews-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            grid-template-rows: 1fr;
+        }
+
+        .review-set {
+            grid-area: 1 / 1;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            transform: translateY(15px);
+            transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out, visibility 0.8s;
+        }
+
+        .review-set.visible {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+
+<body class="bg-white text-black font-sans antialiased overflow-x-hidden">
+
+    <!-- Navbar -->
+    <nav class="fixed w-full top-0 z-50 backdrop-blur-2xl border-b theme-dark" id="navbar">
+        <div class="w-full px-6 lg:px-[1in]">
+            <div class="flex justify-between items-center h-20">
+                <a href="#home" class="flex items-center shrink-0">
+                    <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo"
+                        class="nav-logo h-12 w-auto object-contain transition-opacity duration-300">
+                </a>
+
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="nav-link font-sans font-normal relative group">
+                        Home
+                        <span class="nav-underline absolute -bottom-1 left-0 w-full h-0.5 transition-all"></span>
+                    </a>
+                    <a href="about.html" class="nav-link font-sans font-normal relative group">
+                        About
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="menu.html" class="nav-link font-sans font-normal relative group">
+                        Menu
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="gallery.html" class="nav-link font-sans font-normal relative group">
+                        Gallery
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="contact.html" class="nav-link font-sans font-normal relative group">
+                        Contacts
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button class="mobile-menu-btn focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 transition-all duration-300 opacity-0 pointer-events-none">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white hover:text-gray-300 focus:outline-none transition-colors w-12 h-12 flex items-center justify-center rounded-full bg-white/10">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <a href="#home" class="flex items-center shrink-0 mb-4">
+            <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="h-16 w-auto object-contain">
+        </a>
+        <a href="#home" class="mobile-link text-[#BF953F] text-2xl font-medium tracking-wide transition-colors">Home</a>
+        <a href="about.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">About</a>
+        <a href="menu.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Menu</a>
+        <a href="gallery.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Gallery</a>
+        <a href="contact.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Contacts</a>
+    </div>
+
+    <!-- Home Section -->
+    <section id="home" data-theme="dark" class="relative h-screen flex items-center justify-center overflow-hidden bg-black">
+        <div id="hero-slideshow" class="absolute inset-0 z-0">
+            <div class="slide active absolute inset-0 bg-cover bg-center" style="background-image: url('../images/pic9.webp');"></div>
+            <div class="slide absolute inset-0 bg-cover bg-center" style="background-image: url('../images/pic8.webp');"></div>
+            <div class="slide absolute inset-0 bg-cover bg-center" style="background-image: url('../images/pic2.webp');"></div>
+            <div class="absolute inset-0 bg-black/60 z-10"></div>
+        </div>
+
+        <div class="relative z-20 text-center px-6 lg:px-[1in] w-full mt-10 md:mt-0">
+            <h1 class="reveal text-4xl sm:text-5xl md:text-7xl font-bold mb-6 leading-tight text-white drop-shadow-lg">
+                Where Every Cup is a <br>
+                <span class="bg-gradient-gold text-transparent bg-clip-text bg-[length:200%_auto] hover:animate-gradient drop-shadow-none transition-all duration-300 cursor-default">Masterpiece</span>
+            </h1>
+            <p class="reveal text-base md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto drop-shadow-md" style="transition-delay: 0.2s;">
+                Sip, chill, and escape the heat with our refreshing drinks and cozy vibes. Whether you’re craving iced coffee, fruity coolers, or sweet treats, we’ve got the perfect pick-me-up waiting for you.
+            </p>
+
+            <div class="reveal flex flex-col sm:flex-row justify-center items-center gap-4" style="transition-delay: 0.4s;">
+                <a href="about.html" class="btn-gold px-8 py-4 rounded-full font-bold uppercase tracking-wide w-full sm:w-auto">
+                    Learn More
+                </a>
+                <a href="menu.html" class="px-8 py-4 rounded-full font-bold uppercase tracking-wide border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 w-full sm:w-auto">
+                    See Menu
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" data-theme="light" class="py-24 px-6 lg:px-[1in] w-full bg-white">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            <div class="relative h-[400px] lg:h-[600px] w-full max-w-md mx-auto lg:max-w-none reveal">
+                <div class="absolute top-0 left-0 w-2/3 h-2/3 overflow-hidden rounded-tl-[100px] rounded-br-[100px] shadow-2xl z-10 hover:scale-105 transition-transform duration-700">
+                    <img src="../images/pic7.webp" alt="Cafe Interior" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute bottom-0 right-0 w-3/5 h-3/5 overflow-hidden rounded-tr-[100px] rounded-bl-[100px] shadow-xl z-20 hover:scale-105 transition-transform duration-700 border-8 border-white">
+                    <img src="../images/pic6.webp" alt="Coffee Details" class="w-full h-full object-cover">
+                </div>
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-gradient-gold rounded-full opacity-20 filter blur-xl z-0">
+                </div>
+            </div>
+
+            <div class="text-center lg:text-left">
+                <h2 class="reveal text-sm font-bold tracking-widest text-gray-500 uppercase mb-3" style="transition-delay: 0.1s;">Kape ta?</h2>
+                <h3 class="reveal text-3xl md:text-5xl font-bold mb-6" style="transition-delay: 0.2s;">Same taste, bigger indulgence. Treat yourself to more layers of coffee and cream.</h3>
+                <p class="reveal text-gray-600 mb-6 leading-relaxed" style="transition-delay: 0.3s;">
+                    Isabella’s Cafe sits directly on the Marina Sea Wall in San Jose, Antique, offering the best seats in town for a Sulu Sea sunset. The open-air design catches the coastal breeze, making it a favorite local hangout where the sound of crashing waves serves as the natural soundtrack to your meal.
+                </p>
+                <p class="reveal text-gray-600 mb-10 leading-relaxed" style="transition-delay: 0.4s;">
+                    The vibe is effortlessly relaxed, blending rustic decor with a front-row view of the horizon. It’s the go-to spot for anyone wanting to experience Antique’s "slow life," providing a peaceful escape where you can grab a coffee and watch the sky change colors over the waterfront.
+                </p>
+                <a href="gallery.html" class="reveal inline-flex items-center justify-center gap-3 btn-gold px-8 py-4 rounded-full font-bold uppercase tracking-wide w-full sm:w-auto" style="transition-delay: 0.5s;">
+                    Explore Gallery <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu" data-theme="dark" class="py-24 bg-black text-white relative overflow-hidden">
+        <div class="w-full px-6 lg:px-[1in]">
+            <div class="reveal flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6">
+                <div>
+                    <h2 class="text-sm font-bold tracking-widest text-gray-400 uppercase mb-3">Highly Recommended</h2>
+                    <h3 class="text-3xl md:text-5xl font-bold text-white">Popular Selections</h3>
+                </div>
+
+                <div class="hidden md:flex gap-4">
+                    <button id="prevBtn" class="w-12 h-12 rounded-full border border-gray-600 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="nextBtn" class="w-12 h-12 rounded-full border border-gray-600 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- CHANGED: Removed snap-x and snap-mandatory, changed overflow-x-auto to overflow-x-hidden to let JS control it perfectly -->
+            <div id="carousel" class="reveal flex gap-6 overflow-x-hidden hide-scrollbar -mt-10 pt-16 pb-16 px-4 -mx-4 cursor-grab active:cursor-grabbing" style="transition-delay: 0.2s;">
+                
+                <!-- Item 1: Spanish Latte -->
+                <!-- CHANGED: Removed snap-center -->
+                <div onclick="openItemModal({name: 'Spanish Latte', category: 'Coffee', hot: 160, iced: 170, img: '../drinks/spanish_latte.webp'})"
+                    class="min-w-[80vw] sm:min-w-[300px] md:min-w-[400px] bg-zinc-900 rounded-3xl p-6 hover:-translate-y-2 transition-transform duration-300 group cursor-pointer relative z-10 flex-shrink-0">
+                    <div class="h-64 rounded-2xl overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10 pointer-events-none"></div>
+                        <img src="../drinks/spanish_latte.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Spanish Latte">
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-xl md:text-2xl font-bold">Spanish Latte</h4>
+                        <span class="text-lg md:text-xl font-bold bg-gradient-gold text-transparent bg-clip-text">₱160</span>
+                    </div>
+                    <p class="text-sm md:text-base text-gray-400">Sweet, creamy condensed milk blend.</p>
+                </div>
+
+                <!-- Item 2: Chicken Parmigiana -->
+                <div onclick="openItemModal({name: 'Chicken Parmigiana', category: 'Meals', singlePrice: 265, img: '../pasta/chicken_par.webp'})"
+                    class="min-w-[80vw] sm:min-w-[300px] md:min-w-[400px] bg-zinc-900 rounded-3xl p-6 hover:-translate-y-2 transition-transform duration-300 group cursor-pointer relative z-10 flex-shrink-0">
+                    <div class="h-64 rounded-2xl overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10 pointer-events-none"></div>
+                        <img src="../pasta/chicken_par.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Chicken Parmigiana">
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-xl md:text-2xl font-bold">Chicken Parmigiana</h4>
+                        <span class="text-lg md:text-xl font-bold bg-gradient-gold text-transparent bg-clip-text">₱265</span>
+                    </div>
+                    <p class="text-sm md:text-base text-gray-400">Breaded chicken, rich marinara, melted cheese.</p>
+                </div>
+
+                <!-- Item 3: Pink Milk -->
+                <div onclick="openItemModal({name: 'Pink Milk', category: 'House Blend', hot: null, iced: 130, img: '../drinks/pink_milk.webp'})"
+                    class="min-w-[80vw] sm:min-w-[300px] md:min-w-[400px] bg-zinc-900 rounded-3xl p-6 hover:-translate-y-2 transition-transform duration-300 group cursor-pointer relative z-10 flex-shrink-0">
+                    <div class="h-64 rounded-2xl overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10 pointer-events-none"></div>
+                        <img src="../drinks/pink_milk.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Pink Milk">
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-xl md:text-2xl font-bold">Pink Milk</h4>
+                        <span class="text-lg md:text-xl font-bold bg-gradient-gold text-transparent bg-clip-text">₱130</span>
+                    </div>
+                    <p class="text-sm md:text-base text-gray-400">Refreshing, creamy house blend special.</p>
+                </div>
+
+                <!-- Item 4: Ube Halo-Halo -->
+                <div onclick="openItemModal({name: 'Ube Halo-Halo', category: 'Frappe', singlePrice: 155, img: '../drinks/ube_halo-halo_frappe.webp'})"
+                    class="min-w-[80vw] sm:min-w-[300px] md:min-w-[400px] bg-zinc-900 rounded-3xl p-6 hover:-translate-y-2 transition-transform duration-300 group cursor-pointer relative z-10 flex-shrink-0">
+                    <div class="h-64 rounded-2xl overflow-hidden mb-6 relative">
+                        <div class="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-all z-10 pointer-events-none"></div>
+                        <img src="../drinks/ube_halo-halo_frappe.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Ube Halo-Halo">
+                    </div>
+                    <div class="flex justify-between items-center mb-2">
+                        <h4 class="text-xl md:text-2xl font-bold">Ube Halo-Halo</h4>
+                        <span class="text-lg md:text-xl font-bold bg-gradient-gold text-transparent bg-clip-text">₱155</span>
+                    </div>
+                    <p class="text-sm md:text-base text-gray-400">Local favorite turned into a decadent frappe.</p>
+                </div>
+            </div>
+
+            <div class="reveal mt-8 md:mt-12 text-center relative z-20" style="transition-delay: 0.4s;">
+                <a href="menu.html" class="inline-flex items-center gap-3 btn-gold px-10 py-4 rounded-full font-bold uppercase tracking-wide w-full sm:w-auto justify-center">
+                    See Full Menu <i class="fas fa-book-open"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews Section -->
+    <section id="reviews" data-theme="light" class="py-24 bg-gray-50 px-6 lg:px-[1in] w-full">
+        <div class="w-full">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-sm font-bold tracking-widest text-gray-500 uppercase mb-3">Feedbacks</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-black">What Our Guests Say</h3>
+            </div>
+
+            <div class="reviews-container w-full reveal" style="transition-delay: 0.2s;">
+                <div class="review-set visible grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 hover:-translate-y-3 transition-transform duration-300">
+                        <div class="flex text-yellow-500 mb-4 text-sm">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 mb-6 italic text-sm md:text-base">"Absolutely breathtaking interior. The contrast of the black and white decor with the gold accents makes drinking my morning espresso feel like a luxury event."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?img=32" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-black">Sarah Jenkins</h5>
+                                <span class="text-sm text-gray-500">Local Guide</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 hover:-translate-y-3 transition-transform duration-300">
+                        <div class="flex text-yellow-500 mb-4 text-sm">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 mb-6 italic text-sm md:text-base">"The Gold Leaf Espresso is unlike anything I've ever had. Isabella's Cafe has completely elevated the coffee standard in this city. A must-visit!"</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?img=11" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-black">Michael Chen</h5>
+                                <span class="text-sm text-gray-500">Food Blogger</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 hover:-translate-y-3 transition-transform duration-300">
+                        <div class="flex text-yellow-500 mb-4 text-sm">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 mb-6 italic text-sm md:text-base">"I come here to work and read. The minimalist environment clears my mind, and the pastries are incredibly fresh. Highly recommend the almond croissant."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?img=5" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-black">Emma Watson</h5>
+                                <span class="text-sm text-gray-500">Architect</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-set grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 hover:-translate-y-3 transition-transform duration-300">
+                        <div class="flex text-yellow-500 mb-4 text-sm">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 mb-6 italic text-sm md:text-base">"The attention to detail here is unmatched. The Kyoto Matcha Latte is legitimately the best I've had outside of Japan."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?img=68" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-black">David Lee</h5>
+                                <span class="text-sm text-gray-500">Coffee Enthusiast</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 hover:-translate-y-3 transition-transform duration-300">
+                        <div class="flex text-yellow-500 mb-4 text-sm">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 mb-6 italic text-sm md:text-base">"Perfect lighting, perfect music volume, and the staff are incredibly sweet. It's easily become my favorite morning study spot."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?img=44" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-black">Sophia Martinez</h5>
+                                <span class="text-sm text-gray-500">Student</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 md:p-8 rounded-3xl shadow-lg border border-gray-100 hover:-translate-y-3 transition-transform duration-300">
+                        <div class="flex text-yellow-500 mb-4 text-sm">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                        </div>
+                        <p class="text-gray-600 mb-6 italic text-sm md:text-base">"Visually stunning. The natural light hitting the cafe makes for the most beautiful afternoon coffee breaks. A must-visit place."</p>
+                        <div class="flex items-center gap-4">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full overflow-hidden">
+                                <img src="https://i.pravatar.cc/150?img=33" alt="Avatar" class="w-full h-full object-cover">
+                            </div>
+                            <div>
+                                <h5 class="font-bold text-black">James Wilson</h5>
+                                <span class="text-sm text-gray-500">Photographer</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacts" data-theme="dark" class="bg-black text-white pt-20 pb-10 border-t-4" style="border-image: linear-gradient(45deg, #A67C00, #FCF6BA, #B38728) 1;">
+        <div class="w-full px-6 lg:px-[1in] reveal">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 mb-16">
+
+                <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                    <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="h-10 w-auto mb-6 object-contain">
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Elevating your daily ritual through exceptional coffee, artful pastries, and minimalist design.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://web.facebook.com/isabellas.cafeANTQ" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/isabellas.cafe/" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">Quick Links</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="menu.html" class="hover:text-white transition-colors">Our Menu</a></li>
+                        <li><a href="gallery.html" class="hover:text-white transition-colors">Gallery</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">Contact Us</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1 shrink-0"></i>
+                            <span>SEAWALL,<br>Bay Walk Marina St. San Jose, Antique</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone shrink-0"></i>
+                            <span>+63 112 233 3444</span>
+                        </li>
+                        <li class="flex items-center gap-3 overflow-hidden">
+                            <i class="fas fa-envelope shrink-0"></i>
+                            <span class="truncate">juvellealtubar29@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">Hours</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Mon - Fri</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Saturday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Sunday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="text-center text-gray-600 border-t border-gray-800 pt-8 text-sm">
+                <p>&copy; 2026 Isabella's Cafe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Full Image Lightbox Modal for Home -->
+    <div id="item-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none p-4 md:p-10">
+
+        <!-- Backdrop -->
+        <div id="modal-backdrop" class="absolute inset-0 bg-black/95 backdrop-blur-sm cursor-pointer transition-opacity"></div>
+
+        <!-- Modal Content Container -->
+        <div id="modal-content" class="relative bg-black rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden w-[90vw] max-w-[420px] md:w-[85vh] md:max-w-[650px] aspect-square transform scale-95 transition-transform duration-300 mx-auto">
+
+            <!-- Close Button -->
+            <button id="close-modal" class="absolute top-4 right-4 z-50 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-black/50 text-white hover:bg-white hover:text-black transition-colors backdrop-blur-md border border-white/20 shadow-lg">
+                <i class="fas fa-times text-lg md:text-xl"></i>
+            </button>
+
+            <!-- Item Image -->
+            <img id="modal-img" src="" alt="Menu Item" class="absolute inset-0 w-full h-full object-cover opacity-90">
+
+            <!-- Bottom Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent top-[30%] pointer-events-none"></div>
+
+            <!-- Overlaid Info and Buttons Container -->
+            <div class="absolute bottom-0 left-0 w-full p-5 md:p-8 z-20 flex flex-row justify-between items-end gap-3 pointer-events-none">
+
+                <!-- Left Side: Info -->
+                <div class="pointer-events-auto text-left flex-1">
+                    <p id="modal-category" class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 md:mb-2 drop-shadow-md"></p>
+                    <h3 id="modal-name" class="text-xl md:text-4xl font-bold text-white mb-2 md:mb-4 leading-tight drop-shadow-lg"></h3>
+                    <div id="modal-price-container" class="flex flex-wrap gap-2 md:gap-3 w-full items-center"></div>
+                </div>
+
+                <!-- Right Side: Button -->
+                <div class="pointer-events-auto shrink-0">
+                    <a href="menu.html" class="inline-flex items-center justify-center gap-2 btn-gold px-4 py-2.5 md:px-8 md:py-4 rounded-full font-bold uppercase tracking-wide text-[10px] md:text-sm shadow-[0_10px_20px_rgba(0,0,0,0.5)] whitespace-nowrap">
+                        Explore <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = ''; 
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+
+        // --- Modal Logic ---
+        const modal = document.getElementById('item-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        function openItemModal(item) {
+            document.getElementById('modal-img').src = item.img;
+            document.getElementById('modal-name').textContent = item.name;
+            document.getElementById('modal-category').textContent = item.category;
+
+            let modalPriceHTML = '';
+            const baseClass = "backdrop-blur-md bg-white/10 border border-white/20 rounded-xl px-2 py-1 md:px-4 md:py-2 text-center shadow-lg";
+
+            if (item.hot && item.iced) {
+                modalPriceHTML = `
+                    <div class="${baseClass} min-w-[50px] md:min-w-[70px]">
+                        <span class="block text-gray-300 text-[8px] md:text-[10px] uppercase font-bold tracking-widest mb-0.5">Hot</span>
+                        <span class="text-sm md:text-xl font-bold text-white">₱${item.hot}</span>
+                    </div>
+                    <div class="backdrop-blur-md bg-blue-500/20 border border-blue-400/30 rounded-xl px-2 py-1 md:px-4 md:py-2 text-center shadow-lg min-w-[50px] md:min-w-[70px]">
+                        <span class="block text-blue-300 text-[8px] md:text-[10px] uppercase font-bold tracking-widest mb-0.5">Iced</span>
+                        <span class="text-sm md:text-xl font-bold text-blue-100">₱${item.iced}</span>
+                    </div>`;
+            } else if (item.hot && !item.iced) {
+                modalPriceHTML = `
+                    <div class="${baseClass} min-w-[50px] md:min-w-[70px]">
+                        <span class="block text-gray-300 text-[8px] md:text-[10px] uppercase font-bold tracking-widest mb-0.5">Hot</span>
+                        <span class="text-sm md:text-xl font-bold text-white">₱${item.hot}</span>
+                    </div>`;
+            } else if (!item.hot && item.iced) {
+                modalPriceHTML = `
+                    <div class="backdrop-blur-md bg-blue-500/20 border border-blue-400/30 rounded-xl px-2 py-1 md:px-4 md:py-2 text-center shadow-lg min-w-[50px] md:min-w-[70px]">
+                        <span class="block text-blue-300 text-[8px] md:text-[10px] uppercase font-bold tracking-widest mb-0.5">Iced</span>
+                        <span class="text-sm md:text-xl font-bold text-blue-100">₱${item.iced}</span>
+                    </div>`;
+            } else if (item.singlePrice) {
+                modalPriceHTML = `
+                    <div class="backdrop-blur-md bg-gradient-to-r from-[#A67C00]/90 to-[#BF953F]/90 border border-yellow-500/30 rounded-xl px-2 py-1 md:px-4 md:py-2 flex gap-1.5 md:gap-2 items-center shadow-lg">
+                        <span class="text-black/70 text-[8px] md:text-[10px] uppercase font-bold tracking-widest hidden sm:inline">Price</span>
+                        <span class="text-sm md:text-xl font-bold text-black">₱${item.singlePrice}</span>
+                    </div>`;
+            }
+
+            document.getElementById('modal-price-container').innerHTML = modalPriceHTML;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; 
+
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeItemModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = ''; 
+            }, 300);
+        }
+
+        if (modalBackdrop) modalBackdrop.addEventListener('click', closeItemModal);
+        if (closeModalBtn) closeModalBtn.addEventListener('click', closeItemModal);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal && !modal.classList.contains('hidden')) {
+                closeItemModal();
+            }
+        });
+
+        // --- Theme and Navigation Logic ---
+        const handleNavTheme = () => {
+            const navbar = document.getElementById('navbar');
+            const navLogo = document.querySelector('.nav-logo');
+            const sections = document.querySelectorAll('[data-theme]');
+            const checkPoint = window.scrollY + navbar.offsetHeight + 10;
+            let currentTheme = 'dark';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                if (checkPoint >= sectionTop && checkPoint <= sectionBottom) {
+                    currentTheme = section.getAttribute('data-theme');
+                }
+            });
+
+            if (currentTheme === 'dark') {
+                navbar.classList.add('theme-dark');
+                navbar.classList.remove('theme-light');
+                if (!navLogo.src.includes('logo_white.webp')) {
+                    navLogo.src = '../images/logo_white.webp';
+                }
+            } else {
+                navbar.classList.add('theme-light');
+                navbar.classList.remove('theme-dark');
+                if (!navLogo.src.includes('logo_black.webp')) {
+                    navLogo.src = '../images/logo_black.webp';
+                }
+            }
+
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        };
+
+        window.addEventListener('scroll', handleNavTheme);
+        window.addEventListener('resize', handleNavTheme);
+        handleNavTheme();
+
+        // --- Hero Slideshow ---
+        const slides = document.querySelectorAll('.slide');
+        let currentSlide = 0;
+
+        setInterval(() => {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].classList.add('active');
+        }, 5000);
+
+        // --- Scroll Reveal ---
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        setTimeout(reveal, 100);
+
+        // --- Carousel Auto-Scroll ---
+        const carousel = document.getElementById('carousel');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+
+        if (carousel) {
+            const originalCards = Array.from(carousel.children);
+            originalCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                carousel.appendChild(clone);
+            });
+
+            let isHovered = false;
+            let isManualScrolling = false;
+            let animationId;
+            let touchTimeout; 
+            const gapSize = 24;
+
+            function autoScroll() {
+                if (!isHovered && !isManualScrolling) { 
+                    carousel.scrollLeft += 1.5;
+                    const cycleWidth = (carousel.scrollWidth + gapSize) / 2;
+                    if (carousel.scrollLeft >= cycleWidth) {
+                        carousel.scrollLeft -= cycleWidth;
+                    }
+                }
+                animationId = requestAnimationFrame(autoScroll);
+            }
+
+            animationId = requestAnimationFrame(autoScroll);
+
+            // Desktop Hover Events
+            carousel.addEventListener('mouseenter', () => isHovered = true);
+            carousel.addEventListener('mouseleave', () => isHovered = false);
+            
+            // Mobile Touch Events
+            carousel.addEventListener('touchstart', () => {
+                isHovered = true;
+                clearTimeout(touchTimeout);
+            }, { passive: true });
+            
+            carousel.addEventListener('touchend', () => {
+                touchTimeout = setTimeout(() => {
+                    isHovered = false;
+                }, 1500); 
+            }, { passive: true });
+
+            if (nextBtn && prevBtn) {
+                const handleManualScroll = (amount) => {
+                    isManualScrolling = true;
+                    carousel.scrollBy({ left: amount, behavior: 'smooth' });
+
+                    setTimeout(() => {
+                        isManualScrolling = false;
+                    }, 600);
+                };
+
+                nextBtn.addEventListener('click', () => {
+                    handleManualScroll(400);
+                });
+
+                prevBtn.addEventListener('click', () => {
+                    if (carousel.scrollLeft <= 0) {
+                        const cycleWidth = (carousel.scrollWidth + gapSize) / 2;
+                        carousel.scrollLeft += cycleWidth;
+                    }
+                    handleManualScroll(-400);
+                });
+            }
+        }
+
+        // --- Reviews Rotation ---
+        const reviewSets = document.querySelectorAll('.review-set');
+        let currentReviewSet = 0;
+
+        if (reviewSets.length > 0) {
+            setInterval(() => {
+                reviewSets[currentReviewSet].classList.remove('visible');
+                currentReviewSet = (currentReviewSet + 1) % reviewSets.length;
+                reviewSets[currentReviewSet].classList.add('visible');
+            }, 6000);
+        }
+    </script>
+</body>
+
+</html>

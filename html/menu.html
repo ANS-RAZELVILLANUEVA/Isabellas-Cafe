@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu - Isabella's Cafe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../images/logo.webp">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        black: '#0a0a0a',
+                        zinc: {
+                            900: '#18181b',
+                            950: '#09090b',
+                        },
+                        white: '#ffffff',
+                    },
+                    backgroundImage: {
+                        'gradient-gold': 'linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728, #FDED68, #BF953F)',
+                    },
+                    backgroundSize: {
+                        '200%': '200% auto',
+                    },
+                    animation: {
+                        'gradient': 'gradient 3s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.5, 0, 0, 1), 
+                        transform 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            background-image: linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728);
+            background-size: 200% auto;
+            color: black;
+            transition: 0.5s;
+        }
+
+        .btn-gold:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(191, 149, 63, 0.7);
+        }
+
+        #navbar {
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .nav-link,
+        .nav-underline,
+        .mobile-menu-btn {
+            transition: all 0.3s ease;
+        }
+
+        #navbar.theme-dark {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #navbar.theme-dark .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #navbar.theme-dark .nav-link:hover,
+        #navbar.theme-dark .nav-link.active-nav {
+            color: #ffffff;
+        }
+
+        #navbar.theme-dark .nav-underline {
+            background-color: #ffffff;
+        }
+
+        #navbar.theme-dark .mobile-menu-btn {
+            color: #ffffff;
+        }
+
+        #navbar.theme-light {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-bottom-color: rgba(0, 0, 0, 0.1);
+        }
+
+        #navbar.theme-light .nav-link {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        #navbar.theme-light .nav-link:hover,
+        #navbar.theme-light .nav-link.active-nav {
+            color: #000000;
+        }
+
+        #navbar.theme-light .nav-underline {
+            background-color: #000000;
+        }
+
+        #navbar.theme-light .mobile-menu-btn {
+            color: #000000;
+        }
+
+        @keyframes filterFadeIn {
+            0% { opacity: 0; transform: translateY(20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .filter-show {
+            animation: filterFadeIn 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+        }
+
+        .filter-hide {
+            display: none !important;
+        }
+
+        select option {
+            background-color: #18181b;
+            color: #ffffff;
+        }
+
+        .slide-feature-wrapper {
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-in-out;
+            transform-origin: center bottom;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+
+        .is-next .slide-feature-wrapper { transform: translateX(250px) translateY(150px) rotate(45deg) scale(0.5); opacity: 0; }
+        .is-prev .slide-feature-wrapper { transform: translateX(-250px) translateY(150px) rotate(-45deg) scale(0.5); opacity: 0; }
+        .is-active .slide-feature-wrapper { transform: translateX(0) translateY(0) rotate(0deg) scale(1); opacity: 1; transition-delay: 0.1s; }
+
+        .splash-img-matcha,
+        .splash-img-latte,
+        .splash-img-chicken {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            max-width: none;
+            z-index: 0;
+            transition: transform 1.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.8s ease-out;
+            pointer-events: none;
+            will-change: transform, opacity;
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            transform-style: preserve-3d;
+            -webkit-transform-style: preserve-3d;
+        }
+
+        .splash-img-matcha { width: 250%; }
+        .splash-img-latte { width: 230%; }
+        .splash-img-chicken { width: 120%; }
+
+        @media (max-width: 768px) {
+            .splash-img-matcha { width: 200%; }
+            .splash-img-latte { width: 180%; }
+            .splash-img-chicken { width: 100%; }
+        }
+
+        .is-next .splash-img-matcha,
+        .is-next .splash-img-latte,
+        .is-next .splash-img-chicken { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        
+        .is-prev .splash-img-matcha,
+        .is-prev .splash-img-latte,
+        .is-prev .splash-img-chicken { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+        
+        .is-active .splash-img-matcha,
+        .is-active .splash-img-latte,
+        .is-active .splash-img-chicken { transform: translate(-50%, -50%) scale(1); opacity: 1; transition-delay: 0.35s; }
+    </style>
+</head>
+
+<body class="bg-black text-black font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 backdrop-blur-2xl border-b theme-dark" id="navbar">
+        <div class="w-full px-6 lg:px-[1in]">
+            <div class="flex justify-between items-center h-20">
+                <a href="home.html" class="flex items-center shrink-0">
+                    <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="nav-logo h-12 w-auto object-contain transition-opacity duration-300">
+                </a>
+
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="home.html" class="nav-link font-sans font-normal relative group">
+                        Home
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="about.html" class="nav-link font-sans font-normal relative group">
+                        About
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#" class="nav-link active-nav font-sans font-normal relative group">
+                        Menu
+                        <span class="nav-underline absolute -bottom-1 left-0 w-full h-0.5 transition-all"></span>
+                    </a>
+                    <a href="gallery.html" class="nav-link font-sans font-normal relative group">
+                        Gallery
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="contact.html" class="nav-link font-sans font-normal relative group">
+                        Contacts
+                        <span class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button class="mobile-menu-btn focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 transition-all duration-300 opacity-0 pointer-events-none">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-white hover:text-gray-300 focus:outline-none transition-colors w-12 h-12 flex items-center justify-center rounded-full bg-white/10">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <a href="home.html" class="flex items-center shrink-0 mb-4">
+            <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="h-16 w-auto object-contain">
+        </a>
+        <a href="home.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Home</a>
+        <a href="about.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">About</a>
+        <a href="menu.html" class="mobile-link text-[#BF953F] text-2xl font-medium tracking-wide transition-colors">Menu</a>
+        <a href="gallery.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Gallery</a>
+        <a href="contact.html" class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Contacts</a>
+    </div>
+
+    <!-- 1. Hero Section -->
+    <section id="menu-hero" data-theme="dark" class="relative min-h-[100svh] md:min-h-[85vh] lg:h-[85vh] flex items-center justify-center overflow-hidden bg-black mt-0">
+
+        <!-- Slide 1: Matcha -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0 z-0 is-next">
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('../images/drink7.webp');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/90 via-black/80 to-black/90 z-10"></div>
+            <div class="absolute inset-0 z-20 px-6 lg:px-[1in] w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-8 pt-24 md:pt-20 pb-16">
+                
+                <div class="w-full md:w-1/2 flex justify-center items-center h-[35vh] md:h-full mt-10 md:mt-0 order-1 md:order-2">
+                    <div class="slide-feature-wrapper flex justify-center items-center w-full h-full">
+                        <div class="relative flex justify-center items-center">
+                            <img src="../images/matcha_splash.webp" alt="Matcha Splash" class="splash-img-matcha">
+                            <img src="../images/kapi2.webp" alt="Salty Matcha" class="relative z-10 max-h-[220px] md:max-h-[450px] lg:max-h-[500px] w-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 flex flex-col items-center md:items-start justify-center text-center md:text-left order-2 md:order-1 mb-8 md:mb-0">
+                    <div class="reveal mb-3 md:mb-4" style="transition-delay: 0.1s;">
+                        <span class="text-[10px] md:text-xs font-bold tracking-widest text-white uppercase px-4 py-1.5 bg-white/10 border border-white/20 rounded-full backdrop-blur-md">Featured Drink</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-3 md:mb-4 leading-tight text-white drop-shadow-lg reveal" style="transition-delay: 0.2s;">
+                        Salty <br class="hidden md:block">
+                        <span class="bg-gradient-gold text-transparent bg-clip-text bg-[length:200%_auto] hover:animate-gradient drop-shadow-none transition-all duration-300">Match?!</span>
+                    </h1>
+                    <p class="text-sm md:text-lg text-gray-300 mb-6 max-w-lg drop-shadow-md reveal" style="transition-delay: 0.3s;">
+                        The perfect contradiction. Earthy, ceremonial-grade matcha topped with a velvety layer of our
+                        signature sea salt foam. A savory-sweet experience.
+                    </p>
+                    <div class="reveal" style="transition-delay: 0.4s;">
+                        <span class="text-2xl md:text-3xl font-bold bg-gradient-gold text-transparent bg-clip-text">₱180</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Chicken Parmigiana -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0 z-0 is-next">
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('../images/foods8.webp');"></div>
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/90 via-black/80 to-black/90 z-10"></div>
+            <div class="absolute inset-0 z-20 px-6 lg:px-[1in] w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-8 pt-24 md:pt-20 pb-16">
+                
+                <div class="w-full md:w-1/2 flex justify-center items-center h-[35vh] md:h-full mt-10 md:mt-0 order-1 md:order-2">
+                    <div class="slide-feature-wrapper flex justify-center items-center w-full h-full">
+                        <div class="relative flex justify-center items-center">
+                            <img src="../images/sauce_splash.webp" alt="Sauce Splash" class="splash-img-chicken">
+                            <img src="../images/kain1.webp" alt="Chicken Parmigiana" class="relative z-10 max-h-[220px] md:max-h-[450px] lg:max-h-[500px] w-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 flex flex-col items-center md:items-start justify-center text-center md:text-left order-2 md:order-1 mb-8 md:mb-0">
+                    <div class="reveal mb-3 md:mb-4" style="transition-delay: 0.1s;">
+                        <span class="text-[10px] md:text-xs font-bold tracking-widest text-white uppercase px-4 py-1.5 bg-white/10 border border-white/20 rounded-full backdrop-blur-md">Chef's Special</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-3 md:mb-4 leading-tight text-white drop-shadow-lg reveal" style="transition-delay: 0.2s;">
+                        Chicken <br class="hidden md:block">
+                        <span class="bg-gradient-gold text-transparent bg-clip-text bg-[length:200%_auto] hover:animate-gradient drop-shadow-none transition-all duration-300">Parmigiana</span>
+                    </h1>
+                    <p class="text-sm md:text-lg text-gray-300 mb-6 max-w-lg drop-shadow-md reveal" style="transition-delay: 0.3s;">
+                        Crispy breaded chicken breast smothered in rich marinara sauce and melted mozzarella cheese,
+                        served with our signature pasta.
+                    </p>
+                    <div class="reveal" style="transition-delay: 0.4s;">
+                        <span class="text-2xl md:text-3xl font-bold bg-gradient-gold text-transparent bg-clip-text">₱265</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Spanish Latte -->
+        <div class="carousel-slide absolute inset-0 transition-opacity duration-1000 ease-in-out opacity-0 z-0 is-next">
+            <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('../images/drink2.webp'); background-position: center 70%;"></div>
+            <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-black/90 via-black/80 to-black/90 z-10"></div>
+            <div class="absolute inset-0 z-20 px-6 lg:px-[1in] w-full flex flex-col md:flex-row items-center justify-center md:justify-between gap-4 md:gap-8 pt-24 md:pt-20 pb-16">
+                
+                <div class="w-full md:w-1/2 flex justify-center items-center h-[35vh] md:h-full mt-10 md:mt-0 order-1 md:order-2">
+                    <div class="slide-feature-wrapper flex justify-center items-center w-full h-full">
+                        <div class="relative flex justify-center items-center">
+                            <img src="../images/latte_splash.png" alt="Latte Splash" class="splash-img-latte">
+                            <img src="../images/kapi1.webp" alt="Spanish Latte" class="relative z-10 max-h-[220px] md:max-h-[450px] lg:max-h-[500px] w-auto object-contain drop-shadow-[0_20px_40px_rgba(0,0,0,0.8)]">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="w-full md:w-1/2 flex flex-col items-center md:items-start justify-center text-center md:text-left order-2 md:order-1 mb-8 md:mb-0">
+                    <div class="reveal mb-3 md:mb-4" style="transition-delay: 0.1s;">
+                        <span class="text-[10px] md:text-xs font-bold tracking-widest text-white uppercase px-4 py-1.5 bg-white/10 border border-white/20 rounded-full backdrop-blur-md">Crowd Favorite</span>
+                    </div>
+                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold mb-3 md:mb-4 leading-tight text-white drop-shadow-lg reveal" style="transition-delay: 0.2s;">
+                        Spanish <br class="hidden md:block">
+                        <span class="bg-gradient-gold text-transparent bg-clip-text bg-[length:200%_auto] hover:animate-gradient drop-shadow-none transition-all duration-300">Latte</span>
+                    </h1>
+                    <p class="text-sm md:text-lg text-gray-300 mb-6 max-w-lg drop-shadow-md reveal" style="transition-delay: 0.3s;">
+                        A beautifully balanced blend of bold espresso and sweet condensed milk. Creamy, comforting, and
+                        perfectly crafted to elevate your day.
+                    </p>
+                    <div class="flex items-center justify-center md:justify-start gap-3 md:gap-4 w-full reveal" style="transition-delay: 0.4s;">
+                        <span class="text-2xl md:text-3xl font-bold bg-gradient-gold text-transparent bg-clip-text">₱160</span>
+                        <span class="text-[10px] md:text-xs text-gray-300 font-medium border border-white/30 bg-white/5 px-2 py-1 rounded">Hot</span>
+                        <span class="text-2xl md:text-3xl font-bold bg-gradient-gold text-transparent bg-clip-text ml-2">₱170</span>
+                        <span class="text-[10px] md:text-xs text-gray-300 font-medium border border-white/30 bg-white/5 px-2 py-1 rounded">Iced</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex space-x-3">
+            <button class="indicator-btn w-8 md:w-10 h-1.5 rounded-full bg-white/30 transition-all duration-300 cursor-pointer hover:bg-white"></button>
+            <button class="indicator-btn w-8 md:w-10 h-1.5 rounded-full bg-white/30 transition-all duration-300 cursor-pointer hover:bg-white/60"></button>
+            <button class="indicator-btn w-8 md:w-10 h-1.5 rounded-full bg-white/30 transition-all duration-300 cursor-pointer hover:bg-white/60"></button>
+        </div>
+    </section>
+
+    <!-- 2. Filter Dropdown & Search Panel -->
+    <section id="filters-container" data-theme="dark" class="w-full bg-black pt-8 pb-4 px-6 lg:px-[1in] relative z-40">
+        <div class="w-full bg-zinc-900/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.5)] border border-white/10 p-5 md:p-6 flex flex-col md:flex-row justify-between items-center gap-6 transition-all reveal active" style="transition-delay: 0.1s;">
+            <!-- Category Filter Dropdown -->
+            <div class="w-full md:w-80 relative group">
+                <div class="absolute -top-2.5 left-4 px-2 bg-[#1b1b1e] z-10 text-[10px] font-bold text-gray-400 uppercase tracking-widest rounded-sm">Category</div>
+                <select id="category-filter" class="w-full appearance-none bg-zinc-900 border-2 border-white/10 text-white py-3.5 px-5 pr-10 rounded-xl focus:outline-none focus:border-yellow-600 transition-all cursor-pointer font-medium hover:border-white/20 relative z-0">
+                    <option value="All">All Menu Categories</option>
+                    <option value="Coffee">Coffee</option>
+                    <option value="House Blend">House Blend</option>
+                    <option value="Matcha">Matcha</option>
+                    <option value="Frappe">Frappe</option>
+                    <option value="Refreshers">Refreshers</option>
+                    <option value="Meals">Meals & Pasta</option>
+                    <option value="Munchies">Munchies</option>
+                    <option value="Add ons">Add ons</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-5 text-gray-400 group-hover:text-white transition-colors z-0">
+                    <i class="fas fa-chevron-down text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="w-full md:w-[28rem] relative">
+                <div class="absolute -top-2.5 left-4 px-2 bg-[#1b1b1e] z-10 text-[10px] font-bold text-gray-400 uppercase tracking-widest rounded-sm">Search</div>
+                <input type="text" id="search-input" placeholder="Find your craving..." class="w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-white/10 text-white placeholder-gray-500 focus:outline-none focus:border-yellow-600 transition-all bg-zinc-900 hover:border-white/20 font-medium relative z-0">
+                <i class="fas fa-search absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 z-0"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Guest Favorites -->
+    <section id="guest-favorites-section" data-theme="dark" class="w-full bg-black transition-[grid-template-rows,opacity] duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)] grid opacity-100" style="grid-template-rows: 1fr;">
+        <div class="overflow-hidden min-h-0">
+            <div class="pt-8 md:pt-12 pb-24 px-6 lg:px-[1in] w-full relative z-10">
+                <div class="reveal text-center md:text-left" style="transition-delay: 0.1s;">
+                    <h2 class="text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-2">Highly Recommended</h2>
+                    <h3 class="text-3xl md:text-5xl font-bold text-white mb-8 md:mb-10">Guest Favorites</h3>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Fav 1 -->
+                    <div class="reveal" style="transition-delay: 0.2s;">
+                        <div onclick="openItemModal({name: 'Spanish Latte', category: 'Coffee', hot: 160, iced: 170, img: '../drinks/spanish_latte.webp'})"
+                            class="bg-zinc-900 p-5 rounded-3xl shadow-xl border border-white/5 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(191,149,63,0.15)] hover:border-white/20 transition-all duration-400 group cursor-pointer relative overflow-hidden h-full flex flex-col">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10 pointer-events-none rounded-3xl"></div>
+                            <div class="h-48 rounded-2xl overflow-hidden mb-5 relative z-0 shrink-0">
+                                <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full z-20 flex items-center gap-1.5 shadow-sm">
+                                    <i class="fas fa-star text-yellow-500 text-[10px]"></i>
+                                    <span class="text-xs font-bold text-white">Top Pick</span>
+                                </div>
+                                <img src="../drinks/spanish_latte.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Spanish Latte">
+                            </div>
+                            <div class="relative z-20 flex flex-col justify-between flex-grow">
+                                <div>
+                                    <h4 class="text-xl font-bold text-white mb-1 group-hover:text-yellow-500 transition-colors">Spanish Latte</h4>
+                                    <p class="text-sm text-gray-400 line-clamp-2">Sweet, creamy condensed milk blend.</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2 border-t border-white/10 pt-3 mt-auto">
+                                    <span class="text-xs font-semibold bg-white/5 text-gray-300 border border-white/10 px-3 py-1.5 rounded-full">Hot: ₱160</span>
+                                    <span class="text-xs font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20 px-3 py-1.5 rounded-full">Iced: ₱170</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fav 2 -->
+                    <div class="reveal" style="transition-delay: 0.3s;">
+                        <div onclick="openItemModal({name: 'Chicken Parmigiana', category: 'Meals', singlePrice: 265, img: '../pasta/chicken_par.webp'})"
+                            class="bg-zinc-900 p-5 rounded-3xl shadow-xl border border-white/5 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(191,149,63,0.15)] hover:border-white/20 transition-all duration-400 group cursor-pointer relative overflow-hidden h-full flex flex-col">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10 pointer-events-none rounded-3xl"></div>
+                            <div class="h-48 rounded-2xl overflow-hidden mb-5 relative z-0 shrink-0">
+                                <div class="absolute top-3 left-3 bg-black/70 backdrop-blur-md border border-white/10 px-3 py-1 rounded-full z-20 flex items-center gap-1.5 shadow-sm">
+                                    <i class="fas fa-heart text-red-500 text-[10px]"></i>
+                                    <span class="text-xs font-bold text-white">Loved</span>
+                                </div>
+                                <img src="../pasta/chicken_par.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Chicken Parmigiana">
+                            </div>
+                            <div class="relative z-20 flex flex-col justify-between flex-grow">
+                                <div>
+                                    <h4 class="text-xl font-bold text-white mb-1 group-hover:text-yellow-500 transition-colors">Chicken Parmigiana</h4>
+                                    <p class="text-sm text-gray-400 line-clamp-2">Breaded chicken, rich marinara, melted cheese.</p>
+                                </div>
+                                <div class="border-t border-white/10 pt-3 mt-auto">
+                                    <span class="text-lg font-bold bg-gradient-gold text-transparent bg-clip-text">₱265</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fav 3 -->
+                    <div class="reveal" style="transition-delay: 0.4s;">
+                        <div onclick="openItemModal({name: 'Pink Milk', category: 'House Blend', iced: 130, img: '../drinks/pink_milk.webp'})"
+                            class="bg-zinc-900 p-5 rounded-3xl shadow-xl border border-white/5 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(191,149,63,0.15)] hover:border-white/20 transition-all duration-400 group cursor-pointer relative overflow-hidden h-full flex flex-col">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10 pointer-events-none rounded-3xl"></div>
+                            <div class="h-48 rounded-2xl overflow-hidden mb-5 relative z-0 shrink-0">
+                                <img src="../drinks/pink_milk.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Pink Milk">
+                            </div>
+                            <div class="relative z-20 flex flex-col justify-between flex-grow">
+                                <div>
+                                    <h4 class="text-xl font-bold text-white mb-1 group-hover:text-yellow-500 transition-colors">Pink Milk</h4>
+                                    <p class="text-sm text-gray-400 line-clamp-2">Refreshing, creamy house blend special.</p>
+                                </div>
+                                <div class="flex flex-wrap gap-2 border-t border-white/10 pt-3 mt-auto">
+                                    <span class="text-xs font-semibold bg-blue-500/10 text-blue-300 border border-blue-500/20 px-3 py-1.5 rounded-full">Iced: ₱130</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Fav 4 -->
+                    <div class="reveal" style="transition-delay: 0.5s;">
+                        <div onclick="openItemModal({name: 'Ube Halo-Halo', category: 'Frappe', singlePrice: 155, img: '../drinks/ube_halo-halo_frappe.webp'})"
+                            class="bg-zinc-900 p-5 rounded-3xl shadow-xl border border-white/5 hover:-translate-y-2 hover:shadow-[0_10px_30px_rgba(191,149,63,0.15)] hover:border-white/20 transition-all duration-400 group cursor-pointer relative overflow-hidden h-full flex flex-col">
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 z-10 pointer-events-none rounded-3xl"></div>
+                            <div class="h-48 rounded-2xl overflow-hidden mb-5 relative z-0 shrink-0">
+                                <img src="../drinks/ube_halo-halo_frappe.webp" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="Ube Halo-Halo Frappe">
+                            </div>
+                            <div class="relative z-20 flex flex-col justify-between flex-grow">
+                                <div>
+                                    <h4 class="text-xl font-bold text-white mb-1 group-hover:text-yellow-500 transition-colors">Ube Halo-Halo</h4>
+                                    <p class="text-sm text-gray-400 line-clamp-2">Local favorite turned into a decadent frappe.</p>
+                                </div>
+                                <div class="border-t border-white/10 pt-3 mt-auto">
+                                    <span class="text-lg font-bold bg-gradient-gold text-transparent bg-clip-text">₱155</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. All Foods and Drinks Container -->
+    <section id="menu-board" data-theme="light" class="py-16 px-6 lg:px-[1in] w-full bg-gray-50 min-h-screen rounded-t-[3rem] md:-mt-10 relative z-20 shadow-[0_-20px_40px_rgba(0,0,0,0.3)] border-t border-white/10 transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]">
+
+        <div class="w-full mb-10 text-center md:text-left reveal" style="transition-delay: 0.1s;">
+            <h2 id="menu-section-subtitle" class="text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-2 transition-all duration-300">Our Selection</h2>
+            <h3 id="menu-section-title" class="text-3xl md:text-5xl font-bold text-gray-900 transition-all duration-300">All Menu</h3>
+        </div>
+
+        <div id="no-results" class="hidden text-center py-20 w-full transition-opacity duration-300">
+            <div class="bg-gray-200/50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-search text-4xl text-gray-400"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">No items found</h3>
+            <p class="text-gray-500">Try adjusting your search or filter category.</p>
+        </div>
+
+        <div id="full-menu-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8 w-full reveal" style="transition-delay: 0.2s;">
+            <!-- Items injected by Javascript -->
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacts" data-theme="dark" class="bg-black text-white pt-20 pb-10 border-t-4" style="border-image: linear-gradient(45deg, #A67C00, #FCF6BA, #B38728) 1;">
+        <div class="w-full px-6 lg:px-[1in]">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 mb-16">
+
+                <div class="col-span-1 sm:col-span-2 md:col-span-1 reveal" style="transition-delay: 0.1s;">
+                    <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="h-10 w-auto mb-6 object-contain">
+                    <p class="text-gray-400 mb-6 leading-relaxed">
+                        Elevating your daily ritual through exceptional coffee, artful pastries, and minimalist design.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://web.facebook.com/isabellas.cafeANTQ" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/isabellas.cafe/" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="reveal" style="transition-delay: 0.2s;">
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">Quick Links</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="menu.html" class="hover:text-white transition-colors">Our Menu</a></li>
+                        <li><a href="gallery.html" class="hover:text-white transition-colors">Gallery</a></li>
+                    </ul>
+                </div>
+
+                <div class="reveal" style="transition-delay: 0.3s;">
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">Contact Us</h4>
+                    <ul class="space-y-4 text-gray-400">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1 shrink-0"></i>
+                            <span>SEAWALL,<br>Bay Walk Marina St. San Jose, Antique</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone shrink-0"></i>
+                            <span>+63 112 233 3444</span>
+                        </li>
+                        <li class="flex items-center gap-3 overflow-hidden">
+                            <i class="fas fa-envelope shrink-0"></i>
+                            <span class="truncate">juvellealtubar29@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="reveal" style="transition-delay: 0.4s;">
+                    <h4 class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">Hours</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm">
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Mon - Fri</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Saturday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Sunday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="text-center text-gray-600 border-t border-gray-800 pt-8 text-sm">
+                <p>&copy; 2026 Isabella's Cafe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Full Image Lightbox Modal -->
+    <div id="item-modal" class="fixed inset-0 z-[110] hidden flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-none p-4 md:p-10">
+
+        <div id="modal-backdrop" class="absolute inset-0 bg-black/95 backdrop-blur-sm cursor-pointer transition-opacity pointer-events-auto"></div>
+
+        <div id="modal-content" class="relative bg-black rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden max-w-[95vw] w-full md:w-auto max-h-[90vh] md:max-h-[85vh] transform scale-95 transition-transform duration-300 flex justify-center items-center pointer-events-auto mx-auto">
+
+            <button id="close-modal" class="absolute top-3 right-3 md:top-4 md:right-4 z-50 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-black/40 text-white hover:bg-white hover:text-black transition-colors backdrop-blur-md border border-white/20 pointer-events-auto">
+                <i class="fas fa-times text-lg md:text-xl"></i>
+            </button>
+
+            <img id="modal-img" src="" alt="Menu Item" class="w-full h-auto max-w-[500px] md:max-w-full max-h-[70vh] md:max-h-[85vh] object-contain block m-auto pt-6 pb-24 md:p-0">
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent top-1/3 md:top-1/2 pointer-events-none"></div>
+
+            <div class="absolute bottom-0 left-0 w-full p-4 md:p-6 z-20 flex flex-col justify-end pointer-events-none">
+                <p id="modal-category" class="text-xs md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 drop-shadow-md"></p>
+                <h3 id="modal-name" class="text-2xl md:text-3xl font-bold text-white mb-3 md:mb-4 leading-tight drop-shadow-lg"></h3>
+
+                <div id="modal-price-container" class="flex flex-wrap gap-2 md:gap-3 w-full items-center pointer-events-auto"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = ''; 
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // Hero Carousel Logic
+        const slides = document.querySelectorAll('.carousel-slide');
+        const indicators = document.querySelectorAll('.indicator-btn');
+
+        let currentSlide = -1; 
+        const slideInterval = 5000;
+
+        function showSlide(index) {
+            let prevIndex = currentSlide >= 0 ? currentSlide : 0;
+            if (index === currentSlide && slides[index].classList.contains('is-active')) return;
+            currentSlide = index;
+
+            slides.forEach((slide, i) => {
+                slide.classList.remove('opacity-0', 'opacity-100', 'z-0', 'z-10', 'is-active', 'is-prev', 'is-next');
+
+                if (i === currentSlide) {
+                    slide.classList.add('opacity-100', 'z-10', 'is-active');
+                    indicators[i].classList.remove('bg-white/30');
+                    indicators[i].classList.add('bg-white/90');
+                } else if (i === prevIndex && prevIndex !== -1) {
+                    slide.classList.add('opacity-0', 'z-0', 'is-prev');
+                    indicators[i].classList.remove('bg-white/90');
+                    indicators[i].classList.add('bg-white/30');
+                } else {
+                    slide.classList.add('opacity-0', 'z-0', 'is-next');
+                    indicators[i].classList.remove('bg-white/90');
+                    indicators[i].classList.add('bg-white/30');
+                }
+            });
+        }
+
+        setTimeout(() => { showSlide(0); }, 50);
+
+        function nextSlide() {
+            let nextIndex = (currentSlide + 1) % slides.length;
+            showSlide(nextIndex);
+        }
+
+        let slideTimer = setInterval(nextSlide, slideInterval);
+
+        indicators.forEach((indicator, index) => {
+            indicator.addEventListener('click', () => {
+                clearInterval(slideTimer);
+                showSlide(index);
+                slideTimer = setInterval(nextSlide, slideInterval);
+            });
+        });
+
+        // Data structure for the entire menu
+        const menuData = [
+            { name: "Americano", category: "Coffee", hot: 100, iced: 105, img: "../drinks/americano.webp" },
+            { name: "Cappuccino", category: "Coffee", hot: 120, iced: 125, img: "../drinks/cappuccino.webp" },
+            { name: "Latte", category: "Coffee", hot: 120, iced: 125, img: "../drinks/latte.webp" },
+            { name: "Caramel Macc", category: "Coffee", hot: 150, iced: 155, img: "../drinks/caramel_macc.webp" },
+            { name: "Hazelnut Latte", category: "Coffee", hot: 145, iced: 150, img: "../drinks/hazelnut_latte.webp" },
+            { name: "Mocha Latte", category: "Coffee", hot: 145, iced: 150, img: "../drinks/mocha.webp" },
+            { name: "White Mocha", category: "Coffee", hot: 145, iced: 150, img: "../drinks/white_mocha.webp" },
+            { name: "Spanish Latte", category: "Coffee", hot: 160, iced: 170, img: "../drinks/spanish_latte.webp" },
+            { name: "Sea Salt Latte", category: "Coffee", hot: null, iced: 180, img: "../drinks/sea_salt_latte.webp" },
+            { name: "Chocolate Tablea", category: "House Blend", hot: 150, iced: 155, img: "../drinks/chocolate.webp" },
+            { name: "Chai Latte", category: "House Blend", hot: null, iced: 150, img: "../drinks/chai_latte.webp" },
+            { name: "Pink Milk", category: "House Blend", hot: null, iced: 130, img: "../drinks/pink_milk.webp" },
+            { name: "Berry Bella", category: "House Blend", hot: null, iced: 150, img: "../drinks/berry_bella.webp" },
+            { name: "Basic Matcha", category: "Matcha", hot: 155, iced: 165, img: "../drinks/basic_matcha.webp" },
+            { name: "MatchLav", category: "Matcha", hot: null, iced: 170, img: "../drinks/matchlav.webp" },
+            { name: "BerryMatch", category: "Matcha", hot: null, iced: 170, img: "../drinks/berry_match.webp" },
+            { name: "Salty Match?!", category: "Matcha", hot: null, iced: 180, img: "../drinks/salty_match.webp" },
+            { name: "Strawberry", category: "Frappe", singlePrice: 160, img: "../drinks/strawberry_frappe.webp" },
+            { name: "Banana", category: "Frappe", singlePrice: 155, img: "../drinks/banana_frappe.webp" },
+            { name: "BerryNana", category: "Frappe", singlePrice: 170, img: "../drinks/berrynana_frappe.webp" },
+            { name: "Oreo", category: "Frappe", singlePrice: 160, img: "../drinks/oreo_frappe.webp" },
+            { name: "Ube Halo-Halo", category: "Frappe", singlePrice: 155, img: "../drinks/ube_halo-halo_frappe.webp" },
+            { name: "Pink Lemonade", category: "Refreshers", singlePrice: 115, img: "../drinks/pink_lemonade.webp" },
+            { name: "Lemon Iced Tea", category: "Refreshers", singlePrice: 110, img: "../drinks/lemon_ice_tea.webp" },
+            { name: "Peach Iced Tea", category: "Refreshers", singlePrice: 110, img: "../drinks/peach_iced_tea.webp" },
+            { name: "Raspberry Iced Tea", category: "Refreshers", singlePrice: 110, img: "../drinks/raspberry_iced_tea.webp" },
+            { name: "Cucumber Moringa", category: "Refreshers", singlePrice: 120, img: "../drinks/cucumber_moringa.webp" },
+            { name: "Mango Iced Tea", category: "Refreshers", singlePrice: 125, img: "../drinks/mango_iced_tea.webp" },
+            { name: "Sparkling Lychee", category: "Refreshers", singlePrice: 120, img: "../drinks/sparkling_lychee.webp" },
+            { name: "Blueberry Fizz", category: "Refreshers", singlePrice: 120, img: "../drinks/blueberry_fizz.webp" },
+            { name: "Adobo Flakes", category: "Meals", label: "Rice Meal", singlePrice: 160, img: "../rice_meals/adobo_flakes.webp" },
+            { name: "Hungarian Sausage", category: "Meals", label: "Rice Meal", singlePrice: 180, img: "../rice_meals/hungarian_sausage.webp" },
+            { name: "Chicken Katsu", category: "Meals", label: "Rice Meal", singlePrice: 190, img: "../rice_meals/chicken_katsu.webp" },
+            { name: "Filipino Spaghetti", category: "Meals", label: "Pasta", singlePrice: 175, img: "../pasta/filipino_spag.webp" },
+            { name: "Creamy Carbonara", category: "Meals", label: "Pasta", singlePrice: 175, img: "../pasta/carbonara.webp" },
+            { name: "Aglio Olio", category: "Meals", label: "Pasta", singlePrice: 165, img: "../pasta/aglio_olio.webp" },
+            { name: "Chicken Parmigiana", category: "Meals", label: "Pasta", singlePrice: 265, img: "../pasta/chicken_par.webp" },
+            { name: "Potato Fries", category: "Munchies", singlePrice: 180, img: "../munchies/potato_fries.webp" },
+            { name: "Chicken Poppers", category: "Munchies", singlePrice: 145, img: "../munchies/chicken_poppers.webp" },
+            { name: "Grilled Cheese Sandwich", category: "Munchies", singlePrice: 185, img: "../munchies/grilled_cheeese.webp" },
+            { name: "Cheese Quesadilla", category: "Munchies", multiPrice: "₱140 / ₱270", img: "../munchies/cheese_quesadillas.webp" },
+            { name: "Chicken Quesadilla", category: "Munchies", multiPrice: "₱160 / ₱300", img: "../munchies/chicken_quesadillas.webp" },
+            { name: "Pulled Pork Burger", category: "Munchies", singlePrice: 180, img: "../munchies/pulled_pork_burger.webp" },
+            { name: "Spicy Korean Chicken Burger", category: "Munchies", singlePrice: 170, img: "../munchies/spicy_korean_chicken.webp" },
+            { name: "Espresso", category: "Add ons", singlePrice: 40, img: "../adds_on/espresso.webp" },
+            { name: "Oatmilk", category: "Add ons", singlePrice: 40, img: "../adds_on/oatmilk.webp" },
+            { name: "Rice", category: "Add ons", singlePrice: 25, img: "../adds_on/rice.webp" },
+            { name: "Egg", category: "Add ons", singlePrice: 25, img: "../adds_on/egg.webp" }
+        ];
+
+        const gridContainer = document.getElementById('full-menu-grid');
+
+        function createCardHTML(item) {
+            let priceHTML = '';
+
+            if (item.hot && item.iced) {
+                priceHTML = `
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-xs font-bold bg-gray-100 text-gray-800 border border-gray-200 px-3 py-1.5 rounded-full">Hot: ₱${item.hot}</span>
+                        <span class="text-xs font-bold bg-blue-50 text-blue-800 border border-blue-100 px-3 py-1.5 rounded-full">Iced: ₱${item.iced}</span>
+                    </div>`;
+            } else if (item.hot && !item.iced) {
+                priceHTML = `
+                    <div class="flex gap-2">
+                        <span class="text-xs font-bold bg-gray-100 text-gray-800 border border-gray-200 px-3 py-1.5 rounded-full">Hot: ₱${item.hot}</span>
+                    </div>`;
+            } else if (!item.hot && item.iced) {
+                priceHTML = `
+                    <div class="flex gap-2">
+                        <span class="text-xs font-bold bg-blue-50 text-blue-800 border border-blue-100 px-3 py-1.5 rounded-full">Iced: ₱${item.iced}</span>
+                    </div>`;
+            } else if (item.singlePrice) {
+                priceHTML = `<span class="text-lg font-bold text-gray-900">₱${item.singlePrice}</span>`;
+            } else if (item.multiPrice) {
+                priceHTML = `<span class="text-md font-bold text-gray-900">${item.multiPrice}</span>`;
+            }
+
+            let badgeHTML = item.label ? `<span class="absolute top-3 right-3 bg-black/80 backdrop-blur text-white text-[10px] uppercase font-bold tracking-wider px-3 py-1.5 rounded-full z-20 shadow-md border border-white/10">${item.label}</span>` : '';
+
+            const combinedSearchTerms = `${item.name} ${item.category} ${item.label || ''}`.toLowerCase();
+
+            const itemJSON = JSON.stringify(item).replace(/"/g, '&quot;');
+
+            return `
+                <div class="menu-item bg-white p-5 rounded-3xl shadow-sm hover:shadow-xl border border-gray-100 hover:border-gray-300 hover:-translate-y-2 transition-all duration-300 group cursor-pointer" 
+                    data-category="${item.category}" 
+                    data-search="${combinedSearchTerms}"
+                    onclick="openItemModal(${itemJSON})">
+                    
+                    <div class="h-48 rounded-2xl overflow-hidden mb-5 relative">
+                        ${badgeHTML}
+                        <div class="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-all z-10"></div>
+                        <img src="${item.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="${item.name}">
+                    </div>
+                    <div class="flex flex-col justify-between h-auto md:h-[90px]">
+                        <div class="mb-3 md:mb-0">
+                            <p class="text-[10px] text-yellow-600 font-bold uppercase tracking-widest mb-1.5">${item.category}</p>
+                            <h4 class="text-lg md:text-xl font-bold text-gray-900 leading-tight group-hover:text-yellow-600 transition-colors">${item.name}</h4>
+                        </div>
+                        <div class="border-t border-gray-100 pt-3 mt-auto flex items-center justify-between">
+                            ${priceHTML}
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        gridContainer.innerHTML = menuData.map(createCardHTML).join('');
+
+        // Modal Lightbox Logic
+        const modal = document.getElementById('item-modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalBackdrop = document.getElementById('modal-backdrop');
+        const closeModalBtn = document.getElementById('close-modal');
+
+        function openItemModal(item) {
+            document.getElementById('modal-img').src = item.img;
+            document.getElementById('modal-name').textContent = item.name;
+            document.getElementById('modal-category').textContent = item.category;
+
+            let modalPriceHTML = '';
+            const baseClass = "backdrop-blur-md bg-white/10 border border-white/20 rounded-xl px-3 md:px-4 py-2 text-center shadow-lg";
+
+            if (item.hot && item.iced) {
+                modalPriceHTML = `
+                    <div class="${baseClass} min-w-[70px] md:min-w-[80px]">
+                        <span class="block text-gray-300 text-[8px] md:text-[9px] uppercase font-bold tracking-widest mb-0.5">Hot</span>
+                        <span class="text-base md:text-xl font-bold text-white">₱${item.hot}</span>
+                    </div>
+                    <div class="backdrop-blur-md bg-blue-500/20 border border-blue-400/30 rounded-xl px-3 md:px-4 py-2 text-center shadow-lg min-w-[70px] md:min-w-[80px]">
+                        <span class="block text-blue-300 text-[8px] md:text-[9px] uppercase font-bold tracking-widest mb-0.5">Iced</span>
+                        <span class="text-base md:text-xl font-bold text-blue-100">₱${item.iced}</span>
+                    </div>`;
+            } else if (item.hot && !item.iced) {
+                modalPriceHTML = `
+                    <div class="${baseClass} min-w-[70px] md:min-w-[80px]">
+                        <span class="block text-gray-300 text-[8px] md:text-[9px] uppercase font-bold tracking-widest mb-0.5">Hot</span>
+                        <span class="text-base md:text-xl font-bold text-white">₱${item.hot}</span>
+                    </div>`;
+            } else if (!item.hot && item.iced) {
+                modalPriceHTML = `
+                    <div class="backdrop-blur-md bg-blue-500/20 border border-blue-400/30 rounded-xl px-3 md:px-4 py-2 text-center shadow-lg min-w-[70px] md:min-w-[80px]">
+                        <span class="block text-blue-300 text-[8px] md:text-[9px] uppercase font-bold tracking-widest mb-0.5">Iced</span>
+                        <span class="text-base md:text-xl font-bold text-blue-100">₱${item.iced}</span>
+                    </div>`;
+            } else if (item.singlePrice) {
+                modalPriceHTML = `
+                    <div class="backdrop-blur-md bg-gradient-to-r from-[#A67C00]/90 to-[#BF953F]/90 border border-yellow-500/30 rounded-xl px-3 md:px-4 py-2 flex gap-2 md:gap-3 items-center shadow-lg">
+                        <span class="text-black/70 text-[8px] md:text-[9px] uppercase font-bold tracking-widest hidden sm:inline">Price</span>
+                        <span class="text-lg md:text-2xl font-bold text-black">₱${item.singlePrice}</span>
+                    </div>`;
+            } else if (item.multiPrice) {
+                modalPriceHTML = `
+                    <div class="backdrop-blur-md bg-gradient-to-r from-[#A67C00]/90 to-[#BF953F]/90 border border-yellow-500/30 rounded-xl px-3 md:px-4 py-2 flex gap-2 md:gap-3 items-center shadow-lg">
+                        <span class="text-black/70 text-[8px] md:text-[9px] uppercase font-bold tracking-widest hidden sm:inline">Price</span>
+                        <span class="text-base md:text-xl font-bold text-black">${item.multiPrice}</span>
+                    </div>`;
+            }
+
+            document.getElementById('modal-price-container').innerHTML = modalPriceHTML;
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            setTimeout(() => {
+                modal.classList.remove('opacity-0', 'pointer-events-none');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeItemModal() {
+            modal.classList.add('opacity-0', 'pointer-events-none');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }, 300);
+        }
+
+        modalBackdrop.addEventListener('click', closeItemModal);
+        closeModalBtn.addEventListener('click', closeItemModal);
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+                closeItemModal();
+            }
+        });
+
+        // Filtering Logic
+        const categoryFilter = document.getElementById('category-filter');
+        const searchInput = document.getElementById('search-input');
+        const guestFavoritesSection = document.getElementById('guest-favorites-section');
+        const menuBoard = document.getElementById('menu-board');
+        const noResults = document.getElementById('no-results');
+
+        const menuSectionSubtitle = document.getElementById('menu-section-subtitle');
+        const menuSectionTitle = document.getElementById('menu-section-title');
+
+        let currentFilter = 'All';
+        let currentSearch = '';
+        let displaySearch = '';
+
+        let noResultsTimeout;
+
+        categoryFilter.addEventListener('change', (e) => {
+            currentFilter = e.target.value;
+            applyFilters();
+        });
+
+        searchInput.addEventListener('input', (e) => {
+            displaySearch = e.target.value.trim();
+            currentSearch = displaySearch.toLowerCase();
+            applyFilters();
+        });
+
+        // Global Navigation Theme Logic
+        const handleNavTheme = () => {
+            const navbar = document.getElementById('navbar');
+            const navLogo = document.querySelector('.nav-logo');
+            const sections = document.querySelectorAll('[data-theme]');
+            const checkPoint = window.scrollY + navbar.offsetHeight + 10;
+            let currentTheme = 'dark';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+
+                if (checkPoint >= sectionTop && checkPoint <= sectionBottom) {
+                    currentTheme = section.getAttribute('data-theme');
+                }
+            });
+
+            if (currentTheme === 'dark') {
+                navbar.classList.add('theme-dark');
+                navbar.classList.remove('theme-light');
+                if (!navLogo.src.includes('logo_white.webp')) {
+                    navLogo.src = '../images/logo_white.webp';
+                }
+            } else {
+                navbar.classList.add('theme-light');
+                navbar.classList.remove('theme-dark');
+                if (!navLogo.src.includes('logo_black.webp')) {
+                    navLogo.src = '../images/logo_black.webp';
+                }
+            }
+
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        };
+
+        window.addEventListener('scroll', handleNavTheme);
+        window.addEventListener('resize', handleNavTheme);
+        handleNavTheme();
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        function applyFilters() {
+            let activeCards = 0;
+            const allItems = document.querySelectorAll('.menu-item');
+
+            if (currentFilter !== 'All' || currentSearch !== '') {
+                guestFavoritesSection.style.gridTemplateRows = '0fr';
+                guestFavoritesSection.style.opacity = '0';
+                guestFavoritesSection.style.pointerEvents = 'none';
+
+                menuBoard.classList.remove('md:-mt-10', '-mt-10');
+                menuBoard.classList.add('mt-0');
+
+                if (currentSearch !== '' && currentFilter !== 'All') {
+                    menuSectionSubtitle.textContent = 'Search results for';
+                    menuSectionTitle.textContent = `"${displaySearch}" in ${currentFilter}`;
+                } else if (currentSearch !== '') {
+                    menuSectionSubtitle.textContent = 'Search results for';
+                    menuSectionTitle.textContent = `"${displaySearch}"`;
+                } else if (currentFilter !== 'All') {
+                    menuSectionSubtitle.textContent = 'Category selection';
+                    menuSectionTitle.textContent = currentFilter;
+                }
+            } else {
+                guestFavoritesSection.style.gridTemplateRows = '1fr';
+                guestFavoritesSection.style.opacity = '1';
+                guestFavoritesSection.style.pointerEvents = 'auto';
+
+                menuBoard.classList.remove('mt-0');
+                menuBoard.classList.add('md:-mt-10');
+
+                menuSectionSubtitle.textContent = 'Our Selection';
+                menuSectionTitle.textContent = 'All Menu';
+            }
+
+            let staggerIndex = 0; 
+
+            allItems.forEach(card => {
+                const category = card.getAttribute('data-category');
+                const searchData = card.getAttribute('data-search');
+
+                const matchesCategory = currentFilter === 'All' || category === currentFilter;
+                const matchesSearch = searchData.includes(currentSearch);
+
+                if (matchesCategory && matchesSearch) {
+                    card.classList.remove('filter-hide');
+                    card.classList.remove('filter-show');
+                    void card.offsetWidth; 
+                    card.classList.add('filter-show');
+                    card.style.animationDelay = `${staggerIndex * 0.05}s`;
+                    staggerIndex++;
+                    activeCards++;
+                } else {
+                    card.classList.add('filter-hide');
+                    card.classList.remove('filter-show');
+                    card.style.animationDelay = '0s';
+                }
+            });
+
+            if (activeCards === 0) {
+                clearTimeout(noResultsTimeout);
+                noResultsTimeout = setTimeout(() => { noResults.classList.remove('hidden'); }, 100);
+            } else {
+                clearTimeout(noResultsTimeout);
+                noResults.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Isabella's Cafe</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="../images/logo.webp">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Poppins', 'sans-serif'], },
+                    colors: { black: '#0a0a0a', white: '#ffffff', },
+                    backgroundImage: {
+                        'gradient-gold': 'linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728, #FDED68, #BF953F)',
+                    },
+                    backgroundSize: { '200%': '200% auto', },
+                    animation: {
+                        'gradient': 'gradient 3s ease infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'fade-in-up': 'fadeInUp 1s ease-out forwards',
+                    },
+                    keyframes: {
+                        gradient: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' },
+                        },
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(30px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .btn-gold {
+            background-image: linear-gradient(45deg, #A67C00, #BF953F, #FCF6BA, #B38728);
+            background-size: 200% auto;
+            color: black;
+            transition: 0.5s;
+        }
+
+        .btn-gold:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -10px rgba(191, 149, 63, 0.7);
+        }
+
+        #navbar {
+            transition: background-color 0.4s ease, border-color 0.4s ease;
+        }
+
+        .nav-link,
+        .nav-underline,
+        .mobile-menu-btn {
+            transition: all 0.3s ease;
+        }
+
+        #navbar.theme-dark {
+            background-color: rgba(0, 0, 0, 0.4);
+            border-bottom-color: rgba(255, 255, 255, 0.1);
+        }
+
+        #navbar.theme-dark .nav-link {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        #navbar.theme-dark .nav-link:hover {
+            color: #ffffff;
+        }
+
+        #navbar.theme-dark .nav-underline {
+            background-color: #ffffff;
+        }
+
+        #navbar.theme-dark .mobile-menu-btn {
+            color: #ffffff;
+        }
+
+        #navbar.theme-light {
+            background-color: rgba(255, 255, 255, 0.85);
+            border-bottom-color: rgba(0, 0, 0, 0.1);
+        }
+
+        #navbar.theme-light .nav-link {
+            color: rgba(0, 0, 0, 0.6);
+        }
+
+        #navbar.theme-light .nav-link:hover {
+            color: #000000;
+        }
+
+        #navbar.theme-light .nav-underline {
+            background-color: #000000;
+        }
+
+        #navbar.theme-light .mobile-menu-btn {
+            color: #000000;
+        }
+
+        /* 3D Coverflow Carousel Styles */
+        #featured-coverflow {
+            perspective: 1200px;
+            transform-style: preserve-3d;
+        }
+
+        .coverflow-item {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 100%;
+            max-width: 600px;
+            height: 100%;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), filter 0.8s cubic-bezier(0.25, 1, 0.5, 1), z-index 0.8s, opacity 0.8s;
+            transform-origin: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+        }
+
+        .coverflow-center {
+            transform: translateX(-50%) scale(1) translateZ(80px);
+            z-index: 30;
+            filter: brightness(1);
+            opacity: 1;
+            cursor: pointer;
+        }
+
+        .coverflow-left {
+            transform: translateX(-110%) scale(0.8) rotateY(15deg);
+            z-index: 10;
+            filter: brightness(0.3);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .coverflow-right {
+            transform: translateX(10%) scale(0.8) rotateY(-15deg);
+            z-index: 10;
+            filter: brightness(0.3);
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .coverflow-hidden {
+            transform: translateX(-50%) scale(0.6) translateZ(-50px);
+            z-index: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .coverflow-caption {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .coverflow-center .coverflow-caption {
+            opacity: 1;
+            transform: translateY(0);
+            transition-delay: 0.2s;
+        }
+
+        /* Mobile adjustments for coverflow */
+        @media (max-width: 768px) {
+            .coverflow-item {
+                max-width: 260px;
+            }
+
+            .coverflow-left {
+                transform: translateX(-85%) scale(0.8) rotateY(15deg);
+            }
+
+            .coverflow-right {
+                transform: translateX(-15%) scale(0.8) rotateY(-15deg);
+            }
+        }
+
+        /* Gallery Specific Styles */
+        .masonry-grid {
+            column-count: 1;
+            column-gap: 1.5rem;
+        }
+
+        @media (min-width: 640px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .masonry-grid {
+                column-count: 3;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .masonry-grid {
+                column-count: 4;
+            }
+        }
+
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            position: relative;
+            border-radius: 1rem;
+            overflow: hidden;
+            cursor: pointer;
+            transform: translateZ(0);
+        }
+
+        .filter-btn.active {
+            background-color: #0a0a0a;
+            color: white;
+            border-color: #0a0a0a;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        @keyframes filterFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(15px) scale(0.98);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .filter-animate {
+            animation: filterFadeIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+    </style>
+</head>
+
+<body class="bg-white text-black font-sans antialiased overflow-x-hidden">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full top-0 z-50 backdrop-blur-2xl border-b theme-dark" id="navbar">
+        <div class="w-full px-6 lg:px-[1in]">
+            <div class="flex justify-between items-center h-20">
+                <a href="home.html" class="flex items-center shrink-0">
+                    <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo"
+                        class="nav-logo h-12 w-auto object-contain transition-opacity duration-300">
+                </a>
+
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="home.html" class="nav-link font-sans font-normal relative group">
+                        Home
+                        <span
+                            class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="about.html" class="nav-link font-sans font-normal relative group">
+                        About
+                        <span
+                            class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="menu.html" class="nav-link font-sans font-normal relative group">
+                        Menu
+                        <span
+                            class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                    <a href="#" class="nav-link font-sans font-normal relative group">
+                        Gallery
+                        <span class="nav-underline absolute -bottom-1 left-0 w-full h-0.5 transition-all"></span>
+                    </a>
+                    <a href="contact.html" class="nav-link font-sans font-normal relative group">
+                        Contacts
+                        <span
+                            class="nav-underline absolute -bottom-1 left-0 w-0 h-0.5 transition-all group-hover:w-full"></span>
+                    </a>
+                </div>
+
+                <div class="md:hidden flex items-center">
+                    <button class="mobile-menu-btn focus:outline-none p-2">
+                        <i class="fas fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="fixed inset-0 z-[100] bg-black/95 backdrop-blur-xl flex flex-col items-center justify-center space-y-8 transition-all duration-300 opacity-0 pointer-events-none">
+        <button id="close-menu-btn"
+            class="absolute top-6 right-6 text-white hover:text-gray-300 focus:outline-none transition-colors w-12 h-12 flex items-center justify-center rounded-full bg-white/10">
+            <i class="fas fa-times text-2xl"></i>
+        </button>
+        <a href="home.html" class="flex items-center shrink-0 mb-4">
+            <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo" class="h-16 w-auto object-contain">
+        </a>
+        <a href="home.html"
+            class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Home</a>
+        <a href="about.html"
+            class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">About</a>
+        <a href="menu.html"
+            class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Menu</a>
+        <a href="gallery.html"
+            class="mobile-link text-[#BF953F] text-2xl font-medium tracking-wide transition-colors">Gallery</a>
+        <a href="contact.html"
+            class="mobile-link text-white text-2xl font-medium tracking-wide hover:text-[#BF953F] transition-colors">Contacts</a>
+    </div>
+
+    <!-- Flow 1: Featured Photos (3D Coverflow Carousel) -->
+    <section id="featured" data-theme="dark"
+        class="relative pt-32 md:pt-40 pb-20 md:pb-24 bg-black text-white px-6 lg:px-[1in] overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-30 pointer-events-none">
+            <div
+                class="absolute top-0 right-0 w-64 md:w-96 h-64 md:h-96 bg-gradient-gold rounded-full filter blur-[100px] opacity-20">
+            </div>
+            <div
+                class="absolute bottom-0 left-0 w-64 md:w-96 h-64 md:h-96 bg-gradient-gold rounded-full filter blur-[100px] opacity-20">
+            </div>
+        </div>
+
+        <div class="relative z-10 text-center mb-10 md:mb-16">
+            <h2
+                class="text-xs md:text-sm font-bold tracking-widest text-gray-400 uppercase mb-3 opacity-0 animate-fade-in-up">
+                The Visual Story
+            </h2>
+            <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold mb-4 md:mb-6 opacity-0 animate-fade-in-up leading-tight"
+                style="animation-delay: 200ms;">
+                Through The <br class="hidden sm:block">
+                <span
+                    class="bg-gradient-gold text-transparent bg-clip-text bg-[length:200%_auto] hover:animate-gradient transition-all duration-300">Lens</span>
+            </h1>
+            <p class="text-sm md:text-lg text-gray-400 max-w-2xl mx-auto opacity-0 animate-fade-in-up"
+                style="animation-delay: 400ms;">
+                Discover the artistry in every cup, the warmth of our space, and the moments that make Isabella's
+                special.
+            </p>
+        </div>
+
+        <!-- 3D Carousel Container -->
+        <div class="relative z-10 w-full h-[350px] md:h-[650px] mt-8 md:mt-12 reveal" id="featured-coverflow">
+            <!-- Item 1 -->
+            <div class="coverflow-item" onclick="openLightbox(this)">
+                <img src="../images/pic1.webp" class="w-full h-full object-cover" alt="Morning Rush">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-5 md:p-8">
+                    <div class="coverflow-caption">
+                        <span
+                            class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 block">Featured</span>
+                        <h3 class="text-white font-bold text-xl md:text-4xl">The Morning Rush</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="coverflow-item" onclick="openLightbox(this)">
+                <img src="../images/pic2.webp" class="w-full h-full object-cover" alt="Precision Pour">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-5 md:p-8">
+                    <div class="coverflow-caption">
+                        <span
+                            class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 block">Featured</span>
+                        <h3 class="text-white font-bold text-xl md:text-4xl">Precision Pour</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="coverflow-item" onclick="openLightbox(this)">
+                <img src="../images/pic3.webp" class="w-full h-full object-cover" alt="Artisan Details">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-5 md:p-8">
+                    <div class="coverflow-caption">
+                        <span
+                            class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 block">Featured</span>
+                        <h3 class="text-white font-bold text-xl md:text-4xl">Artisan Details</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="coverflow-item" onclick="openLightbox(this)">
+                <img src="../images/pic4.webp" class="w-full h-full object-cover" alt="Cozy Ambience">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-5 md:p-8">
+                    <div class="coverflow-caption">
+                        <span
+                            class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 block">Featured</span>
+                        <h3 class="text-white font-bold text-xl md:text-4xl">Cozy Ambience</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="coverflow-item" onclick="openLightbox(this)">
+                <img src="../images/pic5.webp" class="w-full h-full object-cover" alt="Sweet Indulgence">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-5 md:p-8">
+                    <div class="coverflow-caption">
+                        <span
+                            class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 block">Featured</span>
+                        <h3 class="text-white font-bold text-xl md:text-4xl">Sweet Indulgence</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 6 -->
+            <div class="coverflow-item" onclick="openLightbox(this)">
+                <img src="../images/pic6.webp" class="w-full h-full object-cover" alt="Perfect Symmetry">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-5 md:p-8">
+                    <div class="coverflow-caption">
+                        <span
+                            class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 block">Featured</span>
+                        <h3 class="text-white font-bold text-xl md:text-4xl">Perfect Symmetry</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 7 -->
+            <div class="coverflow-item" onclick="openLightbox(this)">
+                <img src="../images/pic7.webp" class="w-full h-full object-cover" alt="Evening Glow">
+                <div
+                    class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex flex-col justify-end p-5 md:p-8">
+                    <div class="coverflow-caption">
+                        <span
+                            class="text-[10px] md:text-sm font-bold tracking-widest text-transparent bg-clip-text bg-gradient-gold uppercase mb-1 block">Featured</span>
+                        <h3 class="text-white font-bold text-xl md:text-4xl">Evening Glow</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flow 2: Recent Captures (Scrollable Carousel moving right) -->
+    <section id="recent" data-theme="dark"
+        class="py-16 md:py-20 bg-zinc-950 text-white relative border-t border-zinc-800">
+        <div class="w-full px-6 lg:px-[1in] reveal">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 md:mb-10 gap-4">
+                <div>
+                    <h3 class="text-3xl md:text-4xl font-bold text-white">Recent Captures</h3>
+                </div>
+                <div class="hidden md:flex gap-4">
+                    <button id="prevGalleryBtn"
+                        class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button id="nextGalleryBtn"
+                        class="w-10 h-10 rounded-full border border-gray-600 flex items-center justify-center hover:bg-white hover:text-black transition-all">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div id="recent-carousel"
+                class="flex gap-4 overflow-x-hidden pb-8 -mx-4 px-4 cursor-grab active:cursor-grabbing">
+                <script>
+                    const recentImages = [
+                        { src: "../images/pic1.webp", title: "Sunset Brew" },
+                        { src: "../images/moments8.webp", title: "Fresh Croissants" },
+                        { src: "../images/food5.webp", title: "Interior Details" },
+                        { src: "../images/drink3.webp", title: "Latte Art Practice" },
+                        { src: "../images/pic11.webp", title: "Summer Cooler" },
+                        { src: "../images/pic4.webp", title: "Study Corner" }
+                    ];
+                    recentImages.forEach(img => {
+                        document.write(`
+                            <div class="min-w-[80vw] sm:min-w-[280px] md:min-w-[350px] h-[300px] md:h-[400px] rounded-2xl overflow-hidden relative group cursor-pointer flex-shrink-0" onclick="openLightbox(this)">
+                                <img src="${img.src}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="${img.title}">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-5 md:p-6">
+                                    <h3 class="text-white font-bold text-lg md:text-xl translate-y-4 group-hover:translate-y-0 transition-transform duration-300">${img.title}</h3>
+                                    <span class="hidden">Recent</span>
+                                </div>
+                            </div>
+                        `);
+                    });
+                </script>
+            </div>
+        </div>
+    </section>
+
+    <!-- Flow 3: All Photos (Masonry Grid with Filters) -->
+    <section id="all-photos" data-theme="light"
+        class="py-20 md:py-24 bg-gray-50 px-6 lg:px-[1in] w-full min-h-screen border-t border-gray-200">
+        <div class="w-full">
+            <div class="text-center mb-10 md:mb-12 reveal">
+                <h2 class="text-sm font-bold tracking-widest text-gray-500 uppercase mb-2 md:mb-3">Explore</h2>
+                <h3 class="text-3xl md:text-5xl font-bold text-black mb-8 md:mb-10">Our Complete Gallery</h3>
+
+                <div class="flex flex-wrap justify-center gap-2 md:gap-4">
+                    <button
+                        class="filter-btn active px-4 md:px-6 py-2 md:py-2.5 rounded-full border border-gray-300 text-xs md:text-sm font-medium hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                        data-filter="all">All</button>
+                    <button
+                        class="filter-btn px-4 md:px-6 py-2 md:py-2.5 rounded-full border border-gray-300 text-xs md:text-sm font-medium hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                        data-filter="drinks">Drinks</button>
+                    <button
+                        class="filter-btn px-4 md:px-6 py-2 md:py-2.5 rounded-full border border-gray-300 text-xs md:text-sm font-medium hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                        data-filter="food">Food</button>
+                    <button
+                        class="filter-btn px-4 md:px-6 py-2 md:py-2.5 rounded-full border border-gray-300 text-xs md:text-sm font-medium hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                        data-filter="place">Place</button>
+                    <button
+                        class="filter-btn px-4 md:px-6 py-2 md:py-2.5 rounded-full border border-gray-300 text-xs md:text-sm font-medium hover:border-black hover:bg-black hover:text-white transition-all duration-300"
+                        data-filter="moments">Moments</button>
+                </div>
+            </div>
+
+            <div class="masonry-grid reveal" id="gallery-grid">
+                <script>
+                    const galleryData = [
+                        { cat: "drinks", src: "../images/drink1.webp", title: "Delcious Drink" },
+                        { cat: "drinks", src: "../images/drink2.webp", title: "Refreshing" },
+                        { cat: "drinks", src: "../images/drink3.webp", title: "Drink and chill" },
+                        { cat: "drinks", src: "../images/drink4.webp", title: "Relaxed" },
+                        { cat: "drinks", src: "../images/drink5.webp", title: "Fantastic tea" },
+                        { cat: "drinks", src: "../images/drink6.webp", title: "Sweet as ever" },
+                        { cat: "drinks", src: "../images/drink7.webp", title: "My fave" },
+                        { cat: "drinks", src: "../images/drink8.webp", title: "This coffee is a yum" },
+                        { cat: "food", src: "../images/food1.webp", title: "Tastes absolutely incredible" },
+                        { cat: "food", src: "../images/food2.webp", title: "Best meal ever" },
+                        { cat: "food", src: "../images/food3.webp", title: "Perfectly cooked dish" },
+                        { cat: "food", src: "../images/food4.webp", title: "Simply delicious food" },
+                        { cat: "food", src: "../images/food5.webp", title: "Flavors are spot on" },
+                        { cat: "food", src: "../images/food6.webp", title: "Highly satisfying meal" },
+                        { cat: "food", src: "../images/food7.webp", title: "Total culinary perfection" },
+                        { cat: "food", src: "../images/food8.webp", title: "Loved every bite" },
+                        { cat: "place", src: "../images/pic1.webp", title: "Main Counter" },
+                        { cat: "place", src: "../images/pic2.webp", title: "Sit back and enjoy" },
+                        { cat: "place", src: "../images/pic3.webp", title: "Quiet Corner" },
+                        { cat: "place", src: "../images/pic4.webp", title: "Those pastries" },
+                        { cat: "place", src: "../images/pic5.webp", title: "Pastry Display" },
+                        { cat: "place", src: "../images/pic6.webp", title: "Peace and just" },
+                        { cat: "place", src: "../images/pic7.webp", title: "Fave spot" },
+                        { cat: "moments", src: "../images/moments1.webp", title: "Catching Up" },
+                        { cat: "moments", src: "../images/moments2.webp", title: "Barista Smile" },
+                        { cat: "moments", src: "../images/moments3.webp", title: "Work Mode" },
+                        { cat: "moments", src: "../images/moments4.webp", title: "Sunday Reading" },
+                        { cat: "moments", src: "../images/moments5.webp", title: "Study Group" },
+                        { cat: "moments", src: "../images/moments6.webp", title: "Serving Love" },
+                        { cat: "moments", src: "../images/moments7.webp", title: "First Sip" }
+                    ];
+
+                    for (let i = galleryData.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [galleryData[i], galleryData[j]] = [galleryData[j], galleryData[i]];
+                    }
+
+                    galleryData.forEach(item => {
+                        document.write(`
+                            <div class="masonry-item group" data-category="${item.cat}" onclick="openLightbox(this)">
+                                <img src="${item.src}" class="w-full h-auto transition-transform duration-700 group-hover:scale-105" loading="lazy" alt="${item.title}">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4 md:p-5">
+                                    <h3 class="text-white font-bold text-base md:text-lg translate-y-3 group-hover:translate-y-0 transition-transform duration-300 drop-shadow-md">${item.title}</h3>
+                                    <span class="text-gray-300 text-[10px] md:text-xs uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">${item.cat}</span>
+                                </div>
+                            </div>
+                        `);
+                    });
+                </script>
+            </div>
+
+            <div class="mt-16 text-center reveal">
+                <p class="text-gray-500 italic text-sm md:text-base">End of visual journey.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contacts" data-theme="dark" class="bg-black text-white pt-20 pb-10 border-t-4"
+        style="border-image: linear-gradient(45deg, #A67C00, #FCF6BA, #B38728) 1;">
+        <div class="w-full px-6 lg:px-[1in] reveal">
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 md:gap-12 mb-16">
+
+                <div class="col-span-1 sm:col-span-2 md:col-span-1">
+                    <img src="../images/logo_white.webp" alt="Isabella's Cafe Logo"
+                        class="h-10 w-auto mb-6 object-contain">
+                    <p class="text-gray-400 mb-6 leading-relaxed text-sm md:text-base">
+                        Elevating your daily ritual through exceptional coffee, artful pastries, and minimalist design.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="https://web.facebook.com/isabellas.cafeANTQ" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="https://www.instagram.com/isabellas.cafe/" target="_blank" rel="noopener noreferrer"
+                            class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-gradient-gold hover:text-black transition-all">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div>
+                    <h4
+                        class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">
+                        Quick Links</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm md:text-base">
+                        <li><a href="#home" class="hover:text-white transition-colors">Home</a></li>
+                        <li><a href="about.html" class="hover:text-white transition-colors">About Us</a></li>
+                        <li><a href="menu.html" class="hover:text-white transition-colors">Our Menu</a></li>
+                        <li><a href="gallery.html" class="hover:text-white transition-colors">Gallery</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">
+                        Contact Us</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm md:text-base">
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt mt-1 shrink-0"></i>
+                            <span>SEAWALL,<br>Bay Walk Marina St. San Jose, Antique</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone shrink-0"></i>
+                            <span>+63 112 233 3444</span>
+                        </li>
+                        <li class="flex items-center gap-3 overflow-hidden">
+                            <i class="fas fa-envelope shrink-0"></i>
+                            <span class="truncate">juvellealtubar29@gmail.com</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4
+                        class="text-lg font-bold mb-6 uppercase tracking-wider text-transparent bg-clip-text bg-gradient-gold">
+                        Hours</h4>
+                    <ul class="space-y-4 text-gray-400 text-sm md:text-base">
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Mon - Fri</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Saturday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                        <li class="flex justify-between border-b border-gray-800 pb-2">
+                            <span>Sunday</span>
+                            <span>10:00 AM - 9:00 PM</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <div class="text-center text-gray-600 border-t border-gray-800 pt-8 text-sm md:text-base">
+                <p>&copy; 2026 Isabella's Cafe. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox"
+        class="fixed inset-0 z-[110] bg-black/95 hidden flex-col items-center justify-center opacity-0 transition-opacity duration-300 backdrop-blur-sm">
+        <button onclick="closeLightbox()"
+            class="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-white text-4xl md:text-5xl z-20 transition-colors focus:outline-none w-12 h-12 flex items-center justify-center bg-black/50 rounded-full md:bg-transparent md:rounded-none">&times;</button>
+
+        <div class="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-8">
+            <img id="lightbox-img" src=""
+                class="max-h-[75vh] md:max-h-[80vh] max-w-[95vw] md:max-w-[90vw] object-contain rounded-lg shadow-2xl scale-95 transition-transform duration-400"
+                alt="Full screen image">
+
+            <div class="mt-4 md:mt-6 text-center px-4">
+                <h3 id="lightbox-caption" class="text-white text-xl md:text-2xl font-bold tracking-wide"></h3>
+                <p id="lightbox-category"
+                    class="text-transparent bg-clip-text bg-gradient-gold uppercase text-[10px] md:text-sm tracking-widest mt-1 md:mt-2 font-semibold">
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        // --- Mobile Menu Logic ---
+        const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function openMobileMenu() {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+            document.body.style.overflow = '';
+        }
+
+        if (mobileMenuBtn) mobileMenuBtn.addEventListener('click', openMobileMenu);
+        if (closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+
+        // --- Navbar Theme Logic ---
+        const handleNavTheme = () => {
+            const navbar = document.getElementById('navbar');
+            const navLogo = document.querySelector('.nav-logo');
+            const sections = document.querySelectorAll('[data-theme]');
+            const checkPoint = window.scrollY + navbar.offsetHeight + 10;
+            let currentTheme = 'dark';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionBottom = sectionTop + section.offsetHeight;
+                if (checkPoint >= sectionTop && checkPoint <= sectionBottom) {
+                    currentTheme = section.getAttribute('data-theme');
+                }
+            });
+
+            if (currentTheme === 'dark') {
+                navbar.classList.add('theme-dark');
+                navbar.classList.remove('theme-light');
+                if (navLogo && !navLogo.src.includes('logo_white.webp')) {
+                    navLogo.src = '../images/logo_white.webp';
+                }
+            } else {
+                navbar.classList.add('theme-light');
+                navbar.classList.remove('theme-dark');
+                if (navLogo && !navLogo.src.includes('logo_black.webp')) {
+                    navLogo.src = '../images/logo_black.webp';
+                }
+            }
+
+            if (window.scrollY > 10) {
+                navbar.classList.add('shadow-lg');
+            } else {
+                navbar.classList.remove('shadow-lg');
+            }
+        };
+
+        window.addEventListener('scroll', handleNavTheme);
+        window.addEventListener('resize', handleNavTheme);
+        handleNavTheme();
+
+        // --- Scroll Reveal Logic ---
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 100;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // --- 3D Coverflow Carousel Logic ---
+        const coverflowItems = document.querySelectorAll('.coverflow-item');
+        let currentCoverflowIndex = 0;
+
+        function updateCoverflow() {
+            coverflowItems.forEach((item, index) => {
+                item.classList.remove('coverflow-left', 'coverflow-center', 'coverflow-right', 'coverflow-hidden');
+
+                const leftIndex = (currentCoverflowIndex - 1 + coverflowItems.length) % coverflowItems.length;
+                const rightIndex = (currentCoverflowIndex + 1) % coverflowItems.length;
+
+                if (index === currentCoverflowIndex) {
+                    item.classList.add('coverflow-center');
+                } else if (index === leftIndex) {
+                    item.classList.add('coverflow-left');
+                } else if (index === rightIndex) {
+                    item.classList.add('coverflow-right');
+                } else {
+                    item.classList.add('coverflow-hidden');
+                }
+            });
+        }
+
+        function moveCoverflowLeft() {
+            currentCoverflowIndex = (currentCoverflowIndex + 1) % coverflowItems.length;
+            updateCoverflow();
+        }
+
+        if (coverflowItems.length > 0) {
+            updateCoverflow();
+            let coverflowTimer = setInterval(moveCoverflowLeft, 3000); // Slowed down slightly for better reading
+        }
+
+        // --- Recent Carousel Auto-Looping (Moving Right) Logic ---
+        const recentCarousel = document.getElementById('recent-carousel');
+        const nextBtn = document.getElementById('nextGalleryBtn');
+        const prevBtn = document.getElementById('prevGalleryBtn');
+
+        if (recentCarousel) {
+            const originalCards = Array.from(recentCarousel.children);
+            originalCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                recentCarousel.appendChild(clone);
+            });
+
+            let isHovered = false;
+            let isManualScrolling = false;
+            let animationId;
+            let touchTimeout; // Added to handle mobile swipe delays
+            const gapSize = 16;
+
+            function autoScrollRight() {
+                // REMOVED window.innerWidth >= 768 so it auto-scrolls on mobile too
+                if (!isHovered && !isManualScrolling) {
+                    recentCarousel.scrollLeft -= 1.5;
+
+                    if (recentCarousel.scrollLeft <= 0) {
+                        const cycleWidth = (recentCarousel.scrollWidth + gapSize) / 2;
+                        recentCarousel.scrollLeft += cycleWidth;
+                    }
+                }
+                animationId = requestAnimationFrame(autoScrollRight);
+            }
+
+            setTimeout(() => {
+                recentCarousel.scrollLeft = (recentCarousel.scrollWidth + gapSize) / 2;
+                animationId = requestAnimationFrame(autoScrollRight);
+            }, 100);
+
+            // Desktop Hover Events
+            recentCarousel.addEventListener('mouseenter', () => isHovered = true);
+            recentCarousel.addEventListener('mouseleave', () => isHovered = false);
+
+            // Mobile Touch Events (Modified for smooth swipe handling)
+            recentCarousel.addEventListener('touchstart', () => {
+                isHovered = true;
+                clearTimeout(touchTimeout); // Stop auto-scroll immediately on touch
+            }, { passive: true });
+
+            recentCarousel.addEventListener('touchend', () => {
+                // Wait 1.5 seconds after touch is released before resuming auto-scroll
+                // This prevents the JS from abruptly stopping native swipe momentum
+                touchTimeout = setTimeout(() => {
+                    isHovered = false;
+                }, 1500);
+            }, { passive: true });
+
+            if (nextBtn && prevBtn) {
+                const handleManualScroll = (amount) => {
+                    isManualScrolling = true;
+                    recentCarousel.scrollBy({ left: amount, behavior: 'smooth' });
+
+                    setTimeout(() => {
+                        isManualScrolling = false;
+                    }, 600);
+                };
+
+                nextBtn.addEventListener('click', () => handleManualScroll(366));
+                prevBtn.addEventListener('click', () => {
+                    if (recentCarousel.scrollLeft <= 0) {
+                        const cycleWidth = (recentCarousel.scrollWidth + gapSize) / 2;
+                        recentCarousel.scrollLeft += cycleWidth;
+                    }
+                    handleManualScroll(-366);
+                });
+            }
+        }
+
+        // --- Gallery Filter Logic ---
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const masonryItems = document.querySelectorAll('.masonry-item');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.classList.add('bg-transparent', 'text-black');
+                });
+
+                btn.classList.add('active');
+                const filterValue = btn.getAttribute('data-filter');
+
+                masonryItems.forEach(item => {
+                    const category = item.getAttribute('data-category');
+                    if (filterValue === 'all' || category === filterValue) {
+                        item.style.display = 'block';
+                        item.classList.remove('filter-animate');
+                        void item.offsetWidth;
+                        item.classList.add('filter-animate');
+                    } else {
+                        item.style.display = 'none';
+                        item.classList.remove('filter-animate');
+                    }
+                });
+            });
+        });
+
+        // --- Lightbox Logic ---
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxCaption = document.getElementById('lightbox-caption');
+        const lightboxCategory = document.getElementById('lightbox-category');
+
+        function openLightbox(element) {
+            const img = element.querySelector('img');
+            const title = element.querySelector('h3').innerText;
+            const categorySpan = element.querySelector('span');
+
+            lightboxImg.src = img.src.replace('&w=800', '&w=1600');
+            lightboxCaption.innerText = title;
+            lightboxCategory.innerText = categorySpan ? categorySpan.innerText : 'Gallery';
+
+            lightbox.classList.remove('hidden');
+            lightbox.classList.add('flex');
+
+            setTimeout(() => {
+                lightbox.classList.remove('opacity-0');
+                lightbox.classList.add('opacity-100');
+                lightboxImg.classList.remove('scale-95');
+                lightboxImg.classList.add('scale-100');
+            }, 10);
+
+            document.body.classList.add('modal-open');
+        }
+
+        function closeLightbox() {
+            lightbox.classList.remove('opacity-100');
+            lightbox.classList.add('opacity-0');
+            lightboxImg.classList.remove('scale-100');
+            lightboxImg.classList.add('scale-95');
+
+            setTimeout(() => {
+                lightbox.classList.add('hidden');
+                lightbox.classList.remove('flex');
+                document.body.classList.remove('modal-open');
+                lightboxImg.src = '';
+            }, 300);
+        }
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox || e.target.closest('.relative.w-full') === lightbox.firstElementChild) {
+                if (e.target !== lightboxImg && e.target !== lightboxCaption && e.target !== lightboxCategory) {
+                    closeLightbox();
+                }
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !lightbox.classList.contains('hidden')) {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+
+</html>
